@@ -250,6 +250,71 @@ async def clear_robot_error(bot_id: str):
     
     return {"message": "Error cleared successfully"}
 
+@api_router.post("/copilot/chat", response_model=ChatResponse)
+async def chat_with_copilot(request: ChatMessage):
+    """Chat with AI copilot about a specific robot error"""
+    
+    # Get robot details
+    robot = await db.robots.find_one({"bot_id": request.bot_id}, {"_id": 0})
+    if not robot:
+        raise HTTPException(status_code=404, detail="Robot not found")
+    
+    # Get error details from knowledge base
+    error = ERRORS_KB.get(request.error_code)
+    if not error:
+        raise HTTPException(status_code=404, detail="Error code not found")
+    
+    try:
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        
+        # Create/reuse session for continuous conversation
+        session_id = request.session_id or f"chat-{request.bot_id}-{request.error_code}-{datetime.now(timezone.utc).timestamp()}"
+        
+        # Build context-rich system message
+        steps_text = "\n".join([f"{i+1}. {step}" for i, step in enumerate(error['steps'])])
+        
+        system_message = f"""You are a helpful AI assistant for warehouse robot operations. You're helping an operator resolve an issue with robot {request.bot_id}.
+
+Current Robot Status:
+- Bot ID: {request.bot_id}
+- Battery: {robot.get('battery', 'Unknown')}%
+- Position: X={robot.get('position_x', 'Unknown')}, Y={robot.get('position_y', 'Unknown')}
+- Current Task: {robot.get('current_task', 'None')}
+
+Error Information:
+- Error Code: {request.error_code}
+- Error Title: {error['title']}
+- Description: {error['description']}
+
+Recovery Steps:
+{steps_text}
+
+Your role:
+- Answer questions about this specific error and robot
+- Provide clear, encouraging guidance
+- Help operators understand the steps
+- Suggest alternatives or clarifications when asked
+- Keep responses concise and action-oriented
+- Be friendly and supportive"""
+
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=session_id,
+            system_message=system_message
+        ).with_model("openai", "gpt-4o-mini")
+        
+        user_message = UserMessage(text=request.message)
+        llm_response = await chat.send_message(user_message)
+        
+        return ChatResponse(
+            response=llm_response,
+            session_id=session_id
+        )
+        
+    except Exception as e:
+        logging.error(f"Chat failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to process chat: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
