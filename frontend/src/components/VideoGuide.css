@@ -166,58 +166,439 @@
   }
 }
 
-.action-animation {
+.action-demonstration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.demo-scene {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  font-size: 56px;
+}
+
+.demo-scene > div {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hand Pointer */
+.hand-pointer {
+  animation: point 1.5s ease-in-out infinite;
+}
+
+@keyframes point {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+/* Sensor Highlight */
+.sensor-highlight {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.3);
+  animation: pulse-highlight 2s infinite;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 48px;
-  animation: action-bounce 1s ease-in-out infinite;
 }
 
-@keyframes action-bounce {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    transform: translate(-50%, -60%) scale(1.2);
-  }
-}
-
-.sensor-pulse {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(59, 130, 246, 0.3);
-  animation: pulse-sensor 2s infinite;
-}
-
-@keyframes pulse-sensor {
+@keyframes pulse-highlight {
   0% {
-    transform: scale(0.8);
+    transform: translate(-50%, -50%) scale(0.8);
     opacity: 1;
   }
   100% {
-    transform: scale(2);
+    transform: translate(-50%, -50%) scale(2);
     opacity: 0;
   }
 }
 
-.charge-bolt,
-.cooling-fan,
-.wifi-waves,
-.wrench-tool,
-.cleaning-cloth,
-.tools {
-  animation: float-action 2s ease-in-out infinite;
+/* Check Mark */
+.check-mark {
+  color: #10b981;
+  animation: popIn 0.5s ease-out 1s both;
 }
 
-@keyframes float-action {
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Charging Cable */
+.charging-cable {
+  animation: plug-in 2s ease-in-out infinite;
+}
+
+@keyframes plug-in {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-15deg);
+  }
+}
+
+/* Electricity Flow */
+.electricity-flow {
+  animation: spark 1s ease-in-out infinite;
+  color: #fbbf24;
+}
+
+@keyframes spark {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+/* Battery Fill */
+.battery-indicator {
+  width: 60px;
+  height: 30px;
+  border: 3px solid #1e293b;
+  border-radius: 6px;
+  position: relative;
+  background: #f1f5f9;
+}
+
+.battery-indicator::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 8px;
+  width: 5px;
+  height: 14px;
+  background: #1e293b;
+  border-radius: 0 3px 3px 0;
+}
+
+.battery-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+  border-radius: 3px;
+  animation: fill-battery 3s ease-in-out infinite;
+}
+
+@keyframes fill-battery {
+  0% {
+    width: 20%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Obstacle Removal */
+.obstacle {
+  animation: remove-obstacle 2s ease-in-out infinite;
+}
+
+@keyframes remove-obstacle {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(30px) rotate(45deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(60px) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+.hand-removing {
+  animation: grab-motion 2s ease-in-out infinite;
+}
+
+@keyframes grab-motion {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1) rotate(-10deg);
+  }
+}
+
+/* Temperature */
+.temperature {
+  animation: temp-reading 2s ease-in-out infinite;
+}
+
+@keyframes temp-reading {
+  0%, 100% {
+    color: #ef4444;
+    transform: scale(1);
+  }
+  50% {
+    color: #10b981;
+    transform: scale(1.2);
+  }
+}
+
+/* Rotating Fan */
+.rotating {
+  animation: spin-fan 1s linear infinite;
+}
+
+@keyframes spin-fan {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Signal Waves */
+.signal-waves {
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.signal-waves span {
+  width: 8px;
+  background: #3b82f6;
+  border-radius: 4px;
+  animation: wave-signal 1.5s ease-in-out infinite;
+}
+
+.signal-waves span:nth-child(1) {
+  height: 15px;
+  animation-delay: 0s;
+}
+
+.signal-waves span:nth-child(2) {
+  height: 25px;
+  animation-delay: 0.2s;
+}
+
+.signal-waves span:nth-child(3) {
+  height: 35px;
+  animation-delay: 0.4s;
+}
+
+@keyframes wave-signal {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Items Removing */
+.items-removing {
+  animation: lift-items 2s ease-in-out infinite;
+}
+
+@keyframes lift-items {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+}
+
+/* Gripper Animation */
+.gripper-open {
+  animation: open-close 2s ease-in-out infinite;
+}
+
+@keyframes open-close {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(1.5);
+  }
+}
+
+/* Reset Icon */
+.reset-icon {
+  animation: rotate-reset 2s linear infinite;
+}
+
+@keyframes rotate-reset {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Download/Install */
+.download {
+  animation: move-down 2s ease-in-out infinite;
+}
+
+@keyframes move-down {
   0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(20px);
+  }
+}
+
+.installing {
+  animation: spin-gear 2s linear infinite;
+}
+
+@keyframes spin-gear {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hand Press */
+.hand-press {
+  animation: press-button 2s ease-in-out infinite;
+}
+
+@keyframes press-button {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+}
+
+/* Twist Arrow */
+.twist-arrow {
+  animation: twist 2s ease-in-out infinite;
+}
+
+@keyframes twist {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+}
+
+/* Sparkle */
+.sparkle {
+  animation: sparkle-effect 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle-effect {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5) rotate(180deg);
+  }
+}
+
+/* Navigation Arrow */
+.navigation-arrow {
+  animation: move-forward 2s ease-in-out infinite;
+  font-size: 72px;
+}
+
+@keyframes move-forward {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(30px);
+  }
+}
+
+/* Scanning Beam */
+.scanning-beam {
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+  position: absolute;
+  animation: scan 2s ease-in-out infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(50px);
+  }
+}
+
+/* Generic animations */
+.arrow-up,
+.temp-down,
+.clear-path,
+.connected,
+.safe-icon,
+.gripper-fixed,
+.location-pin,
+.complete,
+.dock-indicator,
+.priority {
+  animation: bounce-in 1s ease-out 1.5s both;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0) translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) translateY(0);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
   }
 }
 
