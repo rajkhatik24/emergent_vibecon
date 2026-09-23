@@ -65,6 +65,16 @@ class CopilotResponse(BaseModel):
     recovery_steps: List[str]
     llm_explanation: Optional[str] = None
 
+class ChatMessage(BaseModel):
+    message: str
+    bot_id: str
+    error_code: str
+    session_id: Optional[str] = None
+
+class ChatResponse(BaseModel):
+    response: str
+    session_id: str
+
 # Initialize robots on startup
 @app.on_event("startup")
 async def startup_event():
