@@ -169,6 +169,7 @@ const CopilotPanel = ({ isOpen, onClose, robot, copilotData, loading, onClearErr
                 errorCode={copilotData.error_code}
                 errorTitle={copilotData.title}
                 recoverySteps={copilotData.recovery_steps}
+                botId={robot?.bot_id}
               />
 
               {/* Recovery Steps */}
