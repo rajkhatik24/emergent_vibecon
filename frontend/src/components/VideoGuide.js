@@ -101,16 +101,158 @@ const VideoGuide = ({ errorCode, errorTitle, recoverySteps }) => {
               </div>
             )}
 
-            {/* Action Animations */}
+            {/* Detailed Action Demonstrations */}
             {isPlaying && (
-              <div className="action-animation" data-testid="action-animation">
-                {animationType === 'sensor-check' && <div className="sensor-pulse"></div>}
-                {animationType === 'battery-charge' && <div className="charge-bolt">⚡</div>}
-                {animationType === 'motor-cool' && <div className="cooling-fan">❄️</div>}
-                {animationType === 'wifi-reconnect' && <div className="wifi-waves">📡</div>}
-                {animationType === 'gripper-fix' && <div className="wrench-tool">🔧</div>}
-                {animationType === 'scanner-clean' && <div className="cleaning-cloth">🧹</div>}
-                {(animationType === 'generic-fix' || !animationType) && <div className="tools">🔧</div>}
+              <div className="action-demonstration" data-testid="action-demo">
+                {/* Sensor Check - Show hand checking sensors */}
+                {animationType === 'sensor-check' && (
+                  <div className="demo-scene">
+                    <div className="hand-pointer">👉</div>
+                    <div className="sensor-highlight"></div>
+                    <div className="check-mark">✓</div>
+                  </div>
+                )}
+                
+                {/* Battery Charging - Show plug connecting */}
+                {animationType === 'battery-charge' && (
+                  <div className="demo-scene">
+                    <div className="charging-cable">🔌</div>
+                    <div className="electricity-flow">⚡⚡⚡</div>
+                    <div className="battery-indicator">
+                      <div className="battery-fill"></div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Path Clearing - Show obstacle being removed */}
+                {animationType === 'path-clear' && (
+                  <div className="demo-scene">
+                    <div className="obstacle">📦</div>
+                    <div className="hand-removing">✋</div>
+                    <div className="clear-path">→</div>
+                  </div>
+                )}
+                
+                {/* Motor Cooling - Show fan and temperature */}
+                {animationType === 'motor-cool' && (
+                  <div className="demo-scene">
+                    <div className="temperature">🌡️</div>
+                    <div className="cooling-fan rotating">💨</div>
+                    <div className="temp-down">↓</div>
+                  </div>
+                )}
+                
+                {/* WiFi Reconnect - Show signal waves */}
+                {animationType === 'wifi-reconnect' && (
+                  <div className="demo-scene">
+                    <div className="router">📡</div>
+                    <div className="signal-waves">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div className="connected">✓</div>
+                  </div>
+                )}
+                
+                {/* Weight Reduction - Show items being removed */}
+                {animationType === 'weight-reduce' && (
+                  <div className="demo-scene">
+                    <div className="weight-scale">⚖️</div>
+                    <div className="items-removing">📦 📦</div>
+                    <div className="arrow-up">↑</div>
+                  </div>
+                )}
+                
+                {/* Gripper Fix - Show gripper opening/closing */}
+                {animationType === 'gripper-fix' && (
+                  <div className="demo-scene">
+                    <div className="gripper-open">✋</div>
+                    <div className="wrench">🔧</div>
+                    <div className="gripper-fixed">👌</div>
+                  </div>
+                )}
+                
+                {/* Navigation Reset - Show compass/direction */}
+                {animationType === 'navigation-reset' && (
+                  <div className="demo-scene">
+                    <div className="compass">🧭</div>
+                    <div className="reset-icon">🔄</div>
+                    <div className="location-pin">📍</div>
+                  </div>
+                )}
+                
+                {/* Software Update - Show download/install */}
+                {animationType === 'software-update' && (
+                  <div className="demo-scene">
+                    <div className="download">⬇️</div>
+                    <div className="installing">⚙️</div>
+                    <div className="complete">✅</div>
+                  </div>
+                )}
+                
+                {/* Emergency Stop - Show button press */}
+                {animationType === 'emergency-release' && (
+                  <div className="demo-scene">
+                    <div className="emergency-button">🔴</div>
+                    <div className="hand-press">👆</div>
+                    <div className="twist-arrow">↻</div>
+                  </div>
+                )}
+                
+                {/* Scanner Clean - Show cleaning action */}
+                {animationType === 'scanner-clean' && (
+                  <div className="demo-scene">
+                    <div className="scanner">📷</div>
+                    <div className="cleaning-cloth">🧹</div>
+                    <div className="sparkle">✨</div>
+                  </div>
+                )}
+                
+                {/* Charging Dock - Show navigation to dock */}
+                {animationType === 'charging-dock' && (
+                  <div className="demo-scene">
+                    <div className="charging-station">🔋</div>
+                    <div className="navigation-arrow">→</div>
+                    <div className="dock-indicator">⚡</div>
+                  </div>
+                )}
+                
+                {/* Wheel Clean - Show wheel and cloth */}
+                {animationType === 'wheel-clean' && (
+                  <div className="demo-scene">
+                    <div className="wheel">⚙️</div>
+                    <div className="dirt">💧</div>
+                    <div className="cloth">🧽</div>
+                  </div>
+                )}
+                
+                {/* Collision Check - Show sensors scanning */}
+                {animationType === 'collision-check' && (
+                  <div className="demo-scene">
+                    <div className="radar">📡</div>
+                    <div className="scanning-beam"></div>
+                    <div className="safe-icon">✓</div>
+                  </div>
+                )}
+                
+                {/* Task Management - Show list organization */}
+                {animationType === 'task-manage' && (
+                  <div className="demo-scene">
+                    <div className="task-list">📋</div>
+                    <div className="organize">↕️</div>
+                    <div className="priority">⭐</div>
+                  </div>
+                )}
+                
+                {/* Generic Fix */}
+                {(animationType === 'generic-fix' || !animationType) && (
+                  <div className="demo-scene">
+                    <div className="tools">🔧</div>
+                    <div className="repair">🔨</div>
+                    <div className="fixed">✅</div>
+                  </div>
+                )}
               </div>
             )}
           </div>
