@@ -39,6 +39,18 @@ except FileNotFoundError:
     TROUBLESHOOTING_KB = {}
     logging.warning("knowledge_base.json not found - using basic error info only")
 
+# Load technical documentation
+TECHNICAL_DOCS = {}
+docs_dir = ROOT_DIR / 'technical_docs'
+if docs_dir.exists():
+    for doc_file in docs_dir.glob('*.txt'):
+        try:
+            with open(doc_file, 'r', encoding='utf-8') as f:
+                TECHNICAL_DOCS[doc_file.stem] = f.read()
+            logging.info(f"Loaded technical doc: {doc_file.stem}")
+        except Exception as e:
+            logging.error(f"Error loading {doc_file}: {e}")
+
 # Create the main app without a prefix
 app = FastAPI()
 
