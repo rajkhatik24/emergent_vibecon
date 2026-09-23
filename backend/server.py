@@ -29,6 +29,15 @@ with open(ROOT_DIR / 'errors.json', 'r') as f:
     errors_data = json.load(f)
     ERRORS_KB = {error['code']: error for error in errors_data['errors']}
 
+# Load deep troubleshooting knowledge base
+try:
+    with open(ROOT_DIR / 'knowledge_base.json', 'r') as f:
+        knowledge_base_data = json.load(f)
+        TROUBLESHOOTING_KB = knowledge_base_data.get('troubleshooting_guides', {})
+except FileNotFoundError:
+    TROUBLESHOOTING_KB = {}
+    logging.warning("knowledge_base.json not found - using basic error info only")
+
 # Create the main app without a prefix
 app = FastAPI()
 
