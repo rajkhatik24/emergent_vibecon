@@ -180,7 +180,7 @@ async def simulate_robots():
         return best_zone if best_zone else zone_list[0]
     
     def move_towards(current_pos, target_pos, occupied):
-        \"\"\"Move one step towards target, avoiding collisions\"\"\"
+        """Move one step towards target, avoiding collisions"""
         x, y = current_pos
         tx, ty = target_pos
         
