@@ -59,6 +59,33 @@ const VideoGuide = ({ errorCode, errorTitle, recoverySteps, botId }) => {
     setCurrentStep(0);
   };
 
+  const generateAIVideo = async () => {
+    setAiVideoStatus('generating');
+    setErrorMessage(null);
+    
+    try {
+      const axios = (await import('axios')).default;
+      const response = await axios.post(`${API}/copilot/generate-video`, {
+        error_code: errorCode,
+        bot_id: botId
+      });
+      
+      if (response.data.status === 'completed') {
+        setAiVideoStatus('completed');
+        setAiVideoUrl(response.data.video_url);
+        setAiVideoPrompt(response.data.prompt);
+      } else if (response.data.status === 'failed') {
+        setAiVideoStatus('failed');
+        setErrorMessage(response.data.message);
+        setAiVideoPrompt(response.data.prompt);
+      }
+    } catch (error) {
+      setAiVideoStatus('failed');
+      setErrorMessage(error.response?.data?.message || 'Failed to generate video. Please try again.');
+      console.error('Video generation error:', error);
+    }
+  };
+
   return (
     <div className="video-guide" data-testid="video-guide">
       <div className="video-guide-header">
