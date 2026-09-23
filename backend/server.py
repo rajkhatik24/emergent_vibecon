@@ -517,10 +517,78 @@ Return ONLY the video generation prompt, nothing else. Keep it under 400 charact
             message=f"Video generation failed: {str(e)}"
         )
 
+def search_technical_docs(query: str) -> str:
+    """Search through loaded technical documentation"""
+    query_lower = query.lower()
+    results = []
+    
+    # Extract potential error codes or component names
+    import re
+    error_pattern = r'error\s*(\d+)|err(\d+)|fault\s*(\d+)|code\s*(\d+)'
+    matches = re.findall(error_pattern, query_lower)
+    error_numbers = [m for group in matches for m in group if m]
+    
+    component_keywords = {
+        'lidar': ['SICK_TiM5xx_LiDAR_ErrorCodes', 'SEER_LiDAR_Manual'],
+        'motor': ['MOON_Motor_Driver_ErrorCodes'],
+        'driver': ['MOON_Motor_Driver_ErrorCodes'],
+        'sensor': ['SICK_TiM5xx_LiDAR_ErrorCodes', 'OSM_Sensor_Guide']
+    }
+    
+    relevant_docs = set()
+    
+    # Find relevant documents based on keywords
+    for keyword, docs in component_keywords.items():
+        if keyword in query_lower:
+            relevant_docs.update([d for d in docs if d in TECHNICAL_DOCS])
+    
+    # If no specific component mentioned, search all docs
+    if not relevant_docs:
+        relevant_docs = set(TECHNICAL_DOCS.keys())
+    
+    # Search through relevant documents
+    for doc_name in relevant_docs:
+        doc_content = TECHNICAL_DOCS[doc_name]
+        doc_lines = doc_content.split('\\n')
+        
+        # Search for error codes
+        for error_num in error_numbers:
+            error_pattern_in_doc = f"ERROR {error_num.zfill(2)}:|ERR_{error_num.zfill(2)}"
+            for i, line in enumerate(doc_lines):
+                if error_pattern_in_doc in line.upper():
+                    # Extract the error section (next 20-30 lines)
+                    section_start = i
+                    section_end = min(i + 30, len(doc_lines))
+                    section = '\\n'.join(doc_lines[section_start:section_end])
+                    results.append(f"\\n=== FROM {doc_name} ===\\n{section}")
+                    break
+        
+        # Also search for keywords in document
+        if not error_numbers:
+            # Search for general mentions
+            for i, line in enumerate(doc_lines):
+                if any(word in line.lower() for word in query_lower.split() if len(word) > 3):
+                    if 'description:' in line.lower() or 'error' in line.lower():
+                        section_start = max(0, i - 2)
+                        section_end = min(i + 15, len(doc_lines))
+                        section = '\\n'.join(doc_lines[section_start:section_end])
+                        results.append(f"\\n=== FROM {doc_name} ===\\n{section}")
+                        break
+    
+    if results:
+        return f"\\n\\nTECHNICAL DOCUMENTATION FOUND:\\n{''.join(results[:2])}"  # Limit to 2 results
+    
+    return ""
+
 async def search_technical_info(query: str) -> str:
-    """Search for technical information online"""
+    """Search for technical information in docs and online"""
+    # First search local technical documentation
+    local_results = search_technical_docs(query)
+    if local_results:
+        return local_results
+    
+    # If nothing found locally, try online search
     try:
-        # Use a search API or web search (simplified here)
         search_url = f"https://api.duckduckgo.com/?q={query}&format=json"
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(search_url)
@@ -528,11 +596,11 @@ async def search_technical_info(query: str) -> str:
                 data = response.json()
                 abstract = data.get('AbstractText', '')
                 if abstract:
-                    return f"TECHNICAL INFO FOUND: {abstract}"
-        return "No specific technical information found online."
+                    return f"\\n\\nONLINE TECHNICAL INFO: {abstract}"
+        return ""
     except Exception as e:
         logging.error(f"Web search failed: {e}")
-        return "Unable to search for technical information at this time."
+        return ""
 
 @api_router.post("/copilot/chat", response_model=ChatResponse)
 async def chat_with_copilot(request: ChatMessage):
