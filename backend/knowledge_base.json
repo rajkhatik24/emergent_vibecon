@@ -1,0 +1,223 @@
+{
+  "troubleshooting_guides": {
+    "ERR_007": {
+      "error_code": "ERR_007",
+      "title": "Gripper Malfunction",
+      "root_causes": [
+        {
+          "cause": "Hydraulic/Pneumatic Pressure Loss",
+          "symptoms": ["Gripper moves slowly", "Weak grip force", "Hissing sounds"],
+          "diagnosis": "Check pressure gauge - normal range is 80-120 PSI. Below 60 PSI indicates leak or compressor issue.",
+          "advanced_steps": [
+            "Locate pressure gauge on gripper unit (usually on side panel)",
+            "Normal operating pressure: 80-120 PSI",
+            "If below 60 PSI: Check air compressor is running and set to correct PSI",
+            "Inspect all pneumatic lines for visible damage or disconnection",
+            "Listen for hissing sounds indicating air leaks",
+            "If leak found: Mark location, power off robot, call technician",
+            "If no leak but low pressure: Compressor may need service"
+          ]
+        },
+        {
+          "cause": "Worn Gripper Pads",
+          "symptoms": ["Items slipping", "Inconsistent grip", "Visible wear on pads"],
+          "diagnosis": "Inspect gripper pads for cracks, tears, smooth surfaces, or uneven wear. Pads should have texture/grip pattern.",
+          "advanced_steps": [
+            "Power off robot for safety",
+            "Visually inspect both gripper pads (top and bottom)",
+            "Look for: cracks, tears, smooth/shiny surfaces, missing chunks",
+            "Check if texture/grip pattern is still visible",
+            "Measure pad thickness if possible (should be >5mm)",
+            "If pads look worn: This requires technician replacement",
+            "IMPORTANT: Pad replacement involves removing gripper assembly - DO NOT attempt without training"
+          ]
+        },
+        {
+          "cause": "Mechanical Obstruction",
+          "symptoms": ["Gripper won't open/close fully", "Grinding noise", "Stuck at one position"],
+          "diagnosis": "Foreign object lodged in gripper mechanism or debris buildup.",
+          "advanced_steps": [
+            "Power off robot completely",
+            "Manually try to move gripper (should have slight resistance but move)",
+            "If completely stuck: DO NOT force it - call technician",
+            "If moves but feels gritty: debris in tracks",
+            "Use flashlight to inspect gripper tracks and joints",
+            "Look for: cardboard pieces, plastic wrap, dust buildup, metal shavings",
+            "If debris visible: Use compressed air to blow out (wear safety glasses)",
+            "If object stuck: Carefully remove with tweezers/pliers",
+            "After cleaning: Test gripper in manual mode before resuming operations"
+          ]
+        },
+        {
+          "cause": "Electrical/Sensor Issue",
+          "symptoms": ["Gripper doesn't respond to commands", "Random opening/closing", "Error codes on display"],
+          "diagnosis": "Faulty sensor, loose cable connection, or control board issue.",
+          "advanced_steps": [
+            "Check gripper control cable connection at robot base",
+            "Look for loose, damaged, or corroded connectors",
+            "Firmly reseat all connectors (push until you hear click)",
+            "Check for bent pins in connectors",
+            "Inspect cable for cuts, pinches, or wear along entire length",
+            "If control panel shows error codes: Note down exact code numbers",
+            "Test gripper sensors: Use manual mode, wave hand near gripper",
+            "Sensors should detect objects 2-5cm away",
+            "If sensors don't respond or cable damaged: Call technician",
+            "This is an electrical issue requiring trained repair"
+          ]
+        }
+      ],
+      "common_operator_questions": [
+        {
+          "question": "Gripper looks fine but still won't work",
+          "answer": "If visual inspection shows no issues, the problem is likely hydraulic pressure, electrical, or internal mechanical. Check the pressure gauge first (should be 80-120 PSI). If pressure is normal, this requires technician diagnosis with specialized tools to test sensors and control circuits."
+        },
+        {
+          "question": "How do I know if it's the pads or something else?",
+          "answer": "If gripper opens and closes normally but can't hold items securely, it's usually the pads. If gripper won't move at all, or moves erratically, it's likely mechanical or electrical. If gripper moves but makes noise or feels rough, it's probably debris or worn bearings."
+        },
+        {
+          "question": "Can I replace the pads myself?",
+          "answer": "No - gripper pad replacement requires: 1) Removing gripper assembly (involves disconnecting hydraulics and electrics), 2) Proper torque specifications for reassembly, 3) Pressure testing after installation, 4) Recalibration of grip force sensors. This MUST be done by a trained technician. Attempting DIY replacement can cause hydraulic leaks, electrical shorts, or safety hazards."
+        },
+        {
+          "question": "Gripper opens but won't close",
+          "answer": "This is usually a one-way valve issue in the hydraulic system or a sensor stuck in 'open' position. First: Check if the pressure gauge drops when trying to close (indicates hydraulic leak). Second: Ensure nothing is blocking the close sensor. This typically requires technician service to replace the valve or sensor."
+        },
+        {
+          "question": "What if lubrication doesn't help?",
+          "answer": "If lubrication doesn't improve movement, the issue is likely: 1) Internal bearing wear (requires replacement), 2) Bent or damaged gripper arms (requires realignment or replacement), or 3) Motor/actuator failure. All of these require technician service. Don't force the gripper or over-lubricate as this can cause damage."
+        }
+      ],
+      "related_issues": ["ERR_006 (Payload Overload)", "ERR_001 (Sensor Malfunction)"],
+      "safety_warnings": [
+        "Always power off robot before inspecting gripper",
+        "Never put hands near gripper when robot is powered on",
+        "Hydraulic fluid under pressure - don't disconnect lines",
+        "Wear safety glasses when using compressed air",
+        "If gripper suddenly releases during operation, items may fall"
+      ],
+      "escalation_criteria": [
+        "Visible hydraulic fluid leak",
+        "Pressure below 60 PSI with no obvious cause",
+        "Electrical sparking or burning smell",
+        "Gripper arm bent or damaged",
+        "Internal mechanical grinding noise",
+        "Pad replacement needed",
+        "Basic troubleshooting steps don't resolve issue"
+      ]
+    },
+    "ERR_013": {
+      "error_code": "ERR_013",
+      "title": "Wheel Slippage Detected",
+      "root_causes": [
+        {
+          "cause": "Wet or Contaminated Floor",
+          "symptoms": ["Wheels spin without moving", "Robot drifts sideways", "Visible wet spots"],
+          "diagnosis": "Check floor surface for water, oil, cleaning solution, or other liquids. Even small amounts can cause slippage.",
+          "advanced_steps": [
+            "Stop robot immediately - continued slippage damages wheels",
+            "Inspect floor around robot for wet spots (3-5 meter radius)",
+            "Check if liquid is: water (clean), oil (slippery/greasy), or cleaning solution (sudsy)",
+            "For water: Use mop and dry thoroughly, set up fans if available",
+            "For oil/grease: Use degreaser and safety absorbent pads, then mop",
+            "For cleaning solution: May indicate scheduled cleaning in progress - coordinate with cleaning staff",
+            "Place 'Wet Floor' signs and caution tape around area",
+            "DO NOT move robot until floor is completely dry",
+            "Test dryness: Paper towel should come away completely dry when pressed to floor",
+            "After floor is dry: Inspect and clean robot wheels before resuming"
+          ]
+        },
+        {
+          "cause": "Worn Wheel Treads",
+          "symptoms": ["Consistent slippage in all areas", "Smooth wheel surface", "Reduced traction"],
+          "diagnosis": "Inspect wheel treads for wear. New wheels have 3-4mm deep tread pattern. Worn wheels appear smooth or have <1mm tread depth.",
+          "advanced_steps": [
+            "Power off robot and engage parking brake",
+            "Inspect each wheel (robot typically has 4 wheels)",
+            "Look for tread pattern depth - should be 3-4mm for new, minimum 1.5mm for safe operation",
+            "Check for: smooth/bald spots, uneven wear (one side more worn), cracks in rubber",
+            "Measure tread depth with ruler if possible",
+            "If tread depth below 1.5mm: Wheels need replacement - call technician",
+            "If uneven wear: May indicate alignment issue - requires technician diagnosis",
+            "Typical wheel life: 12-18 months depending on usage",
+            "DO NOT operate robot with worn wheels - safety hazard"
+          ]
+        },
+        {
+          "cause": "Debris on Wheels",
+          "symptoms": ["Recent onset slippage", "Visible debris", "Vibration during movement"],
+          "diagnosis": "Plastic wrap, tape, cardboard, or other materials wrapped around wheels reducing traction.",
+          "advanced_steps": [
+            "Power off robot completely",
+            "Visually inspect each wheel for debris",
+            "Common debris: plastic wrap, packing tape, labels, cardboard, wire, hair/fiber buildup",
+            "Manually rotate each wheel to see all sides",
+            "To remove debris:",
+            "- For plastic wrap/tape: Carefully cut and peel away (use safety knife)",
+            "- For stuck material: Scrape with plastic scraper (don't use metal - damages rubber)",
+            "- For fiber buildup: Use stiff brush to clean tread grooves",
+            "Clean each wheel thoroughly before moving to next one",
+            "After cleaning: Rotate wheels by hand - should spin freely without wobble",
+            "If wobble detected: Bearing issue - call technician"
+          ]
+        },
+        {
+          "cause": "Overloaded Robot",
+          "symptoms": ["Slippage only when carrying heavy loads", "Wheels flatten under weight", "Robot sluggish"],
+          "diagnosis": "Robot carrying more weight than designed capacity, causing wheel deformation and reduced traction.",
+          "advanced_steps": [
+            "Check robot load capacity specification (usually 100-500 kg depending on model)",
+            "Weigh current payload if possible (use scale or check package weight labels)",
+            "If overloaded: Remove items until within capacity",
+            "Inspect wheels after overload event:",
+            "- Look for flat spots on wheels (indicates sustained overload damage)",
+            "- Check for bulging or deformed wheel sidewalls",
+            "- Test wheel firmness (should be firm, not soft/squishy)",
+            "If wheels damaged from overload: Requires replacement by technician",
+            "Prevent future: Train staff on weight limits, add warning labels, install load sensors",
+            "Consider splitting heavy loads across multiple trips"
+          ]
+        }
+      ],
+      "common_operator_questions": [
+        {
+          "question": "Floor looks dry but robot still slips",
+          "answer": "The floor may have invisible residue (cleaning solution film, oil film, or concrete dust). Try these: 1) Wipe a small area with white cloth - if cloth shows dirt/residue, floor needs deeper cleaning. 2) Check if floor was recently cleaned (residue can remain 30-60 minutes). 3) Test different floor area - if no slippage elsewhere, it's definitely floor issue. 4) Consider floor material - some tiles become slippery when polished."
+        },
+        {
+          "question": "Only slips in certain areas of warehouse",
+          "answer": "This indicates localized floor issue, not wheel problem. Causes: 1) That area may have different flooring material (tiles vs concrete). 2) Recent spill or cleaning in that zone. 3) Temperature/humidity difference causing condensation. 4) Floor sealant or wax applied unevenly. Solution: Mark problematic area, clean thoroughly, consider anti-slip treatment for that zone, or route robots around it."
+        },
+        {
+          "question": "How often should wheels be replaced?",
+          "answer": "Typical wheel lifespan: 12-18 months with normal use. Factors affecting life: 1) Operating hours per day (more hours = faster wear). 2) Load weight (heavier loads = faster wear). 3) Floor surface (rough concrete wears faster than smooth). 4) Frequency of starts/stops (more wear). Check tread depth monthly - replace when below 1.5mm. Don't wait for complete failure."
+        },
+        {
+          "question": "Can I reduce robot speed to help with slippage?",
+          "answer": "Yes, reducing speed helps temporarily but doesn't fix root cause. In robot settings, reduce max speed by 25-50%. This gives wheels more time to grip and reduces sudden acceleration forces. However: This is a TEMPORARY measure only. You must still identify and fix the actual problem (wet floor, worn wheels, etc.). Don't operate long-term at reduced speed as it affects productivity."
+        }
+      ],
+      "environmental_factors": [
+        "Temperature: Below 5°C, rubber wheels lose flexibility and grip",
+        "Humidity: Above 80% can cause floor condensation",
+        "Floor type: Smooth epoxy floors more slippery than rough concrete",
+        "Recent floor maintenance: Wax, sealant, or polish affects traction",
+        "Traffic: High-traffic areas may have compacted dirt layer"
+      ],
+      "related_issues": ["ERR_008 (Navigation Error)", "ERR_006 (Payload Overload)"],
+      "safety_warnings": [
+        "Robot may move unpredictably during slippage - keep personnel clear",
+        "Wet floors are slip hazard for humans too - mark area",
+        "Don't attempt to push or guide slipping robot manually",
+        "Overloaded robot with slippage can cause structural damage"
+      ],
+      "escalation_criteria": [
+        "Slippage continues after floor cleaned and dried",
+        "Wheel tread depth below 1.5mm",
+        "Wheels show flat spots or deformation",
+        "Unusual vibration or noise from wheels",
+        "Uneven wear pattern across wheels (indicates alignment issue)"
+      ]
+    }
+  }
+}
