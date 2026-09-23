@@ -228,7 +228,8 @@ async def simulate_robots():
         if robot['status'] == 'error' and robot.get('error_code'):
             continue
         
-        current_pos = (robot['position_x'], robot['position_y'])\n        
+        current_pos = (robot['position_x'], robot['position_y'])
+        
         # Remove current position from occupied for movement calculation
         occupied_positions.discard(current_pos)
         
