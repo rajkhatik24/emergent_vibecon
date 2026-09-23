@@ -164,6 +164,13 @@ const CopilotPanel = ({ isOpen, onClose, robot, copilotData, loading, onClearErr
                 </div>
               )}
 
+              {/* Video Guide */}
+              <VideoGuide 
+                errorCode={copilotData.error_code}
+                errorTitle={copilotData.title}
+                recoverySteps={copilotData.recovery_steps}
+              />
+
               {/* Recovery Steps */}
               <div className="recovery-steps" data-testid="recovery-steps">
                 <div className="steps-header">
