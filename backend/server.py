@@ -263,6 +263,104 @@ async def clear_robot_error(bot_id: str):
     
     return {"message": "Error cleared successfully"}
 
+@api_router.post("/copilot/generate-video", response_model=VideoGenerationResponse)
+async def generate_video(request: VideoGenerationRequest):
+    """Generate AI video demonstration for error resolution"""
+    
+    # Get error details
+    error = ERRORS_KB.get(request.error_code)
+    if not error:
+        raise HTTPException(status_code=404, detail="Error code not found")
+    
+    # Get robot details
+    robot = await db.robots.find_one({"bot_id": request.bot_id}, {"_id": 0})
+    if not robot:
+        raise HTTPException(status_code=404, detail="Robot not found")
+    
+    try:
+        # Use LLM to generate optimized video prompt
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=f"video-prompt-{request.error_code}",
+            system_message="You are an expert at creating video generation prompts for technical repair demonstrations. Create short, descriptive prompts that will generate clear instructional videos showing warehouse robot repair procedures."
+        ).with_model("openai", "gpt-4o-mini")
+        
+        steps_text = "\\n".join([f"{i+1}. {step}" for i, step in enumerate(error['steps'])])
+        
+        user_message = UserMessage(
+            text=f"""Create a detailed video generation prompt for an instructional video showing how to fix this warehouse robot error:
+
+Error: {error['title']}
+Description: {error['description']}
+
+Recovery Steps:
+{steps_text}
+
+Generate a prompt for a 5-10 second video that visually demonstrates the KEY repair action (pick the most visual/important step). The video should:
+- Show a warehouse robot with the specific issue
+- Demonstrate the repair action clearly
+- Be from a first-person operator perspective
+- Include hands performing the action
+- Be realistic and professional
+
+Return ONLY the video generation prompt, nothing else. Keep it under 400 characters."""
+        )
+        
+        video_prompt = await chat.send_message(user_message)
+        logging.info(f"Generated video prompt: {video_prompt}")
+        
+        # Check if Replicate API key is available
+        replicate_key = os.environ.get('REPLICATE_API_TOKEN')
+        
+        if not replicate_key:
+            # Return prompt but indicate no API key
+            return VideoGenerationResponse(
+                status="failed",
+                prompt=video_prompt,
+                message="Replicate API key not configured. Please add REPLICATE_API_TOKEN to .env file. Get your free key at replicate.com (50 videos/month free tier)."
+            )
+        
+        # Generate video using Replicate (AnimateDiff model - free tier friendly)
+        logging.info("Starting video generation with Replicate...")
+        
+        output = await asyncio.to_thread(
+            replicate.run,
+            "lucataco/animate-diff:1531004ee4c98894ab11f3a03e03ab6b339c8888e93503fa292bdc0ff8a870f7",
+            input={
+                "prompt": video_prompt,
+                "num_frames": 16,
+                "guidance_scale": 7.5,
+                "num_inference_steps": 25
+            }
+        )
+        
+        # output is typically a URL or file path
+        video_url = str(output) if output else None
+        
+        if video_url:
+            return VideoGenerationResponse(
+                status="completed",
+                video_url=video_url,
+                prompt=video_prompt,
+                message="Video generated successfully!"
+            )
+        else:
+            return VideoGenerationResponse(
+                status="failed",
+                prompt=video_prompt,
+                message="Video generation completed but no output received"
+            )
+        
+    except Exception as e:
+        logging.error(f"Video generation failed: {str(e)}")
+        return VideoGenerationResponse(
+            status="failed",
+            prompt=video_prompt if 'video_prompt' in locals() else None,
+            message=f"Video generation failed: {str(e)}"
+        )
+
 @api_router.post("/copilot/chat", response_model=ChatResponse)
 async def chat_with_copilot(request: ChatMessage):
     """Chat with AI copilot about a specific robot error"""
