@@ -337,18 +337,25 @@ async def ask_copilot(request: CopilotRequest):
         chat = LlmChat(
             api_key=api_key,
             session_id=f"copilot-{error_code}",
-            system_message="You are a helpful warehouse operations assistant. Explain robot errors and recovery steps in simple, friendly language that any operator can understand. Keep responses concise and action-oriented."
+            system_message="You are an expert warehouse operations assistant helping operators resolve robot issues. Explain errors and recovery steps in simple, friendly language. Be encouraging but realistic - mention when professional help is needed. Keep responses conversational and concise (3-4 sentences max for initial explanation)."
         ).with_model("openai", "gpt-4o-mini")
         
         steps_text = "\n".join([f"{i+1}. {step}" for i, step in enumerate(error['steps'])])
         
         user_message = UserMessage(
-            text=f"""A warehouse robot has encountered error '{error['title']}: {error['description']}'
+            text=f"""A warehouse robot has error: '{error['title']}'
+Description: {error['description']}
 
-Here are the technical recovery steps:
+Recovery steps:
 {steps_text}
 
-Please rephrase these steps in friendly, easy-to-understand language for a warehouse operator. Keep it brief and encouraging."""
+Give a brief, encouraging initial explanation (3-4 sentences) that:
+1. Acknowledges the issue in simple terms
+2. Explains what likely caused it
+3. Gives confidence it's usually fixable OR mentions if it needs a technician
+4. Invites them to ask questions
+
+Do NOT list all the steps - they can see those. Be conversational."""
         )
         
         llm_response = await chat.send_message(user_message)
