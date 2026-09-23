@@ -78,6 +78,16 @@ class ChatResponse(BaseModel):
     response: str
     session_id: str
 
+class VideoGenerationRequest(BaseModel):
+    error_code: str
+    bot_id: str
+
+class VideoGenerationResponse(BaseModel):
+    status: str  # "generating", "completed", "failed"
+    video_url: Optional[str] = None
+    prompt: Optional[str] = None
+    message: str
+
 # Initialize robots on startup
 @app.on_event("startup")
 async def startup_event():
