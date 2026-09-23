@@ -2,10 +2,17 @@ import React, { useState } from 'react';
 import { Button } from './ui/button';
 import './VideoGuide.css';
 
-const VideoGuide = ({ errorCode, errorTitle, recoverySteps }) => {
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+const VideoGuide = ({ errorCode, errorTitle, recoverySteps, botId }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAIVideoOption, setShowAIVideoOption] = useState(false);
+  const [aiVideoStatus, setAiVideoStatus] = useState(null); // null, 'generating', 'completed', 'failed'
+  const [aiVideoUrl, setAiVideoUrl] = useState(null);
+  const [aiVideoPrompt, setAiVideoPrompt] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const getAnimationForError = (errorCode) => {
     // Map error codes to animation types
