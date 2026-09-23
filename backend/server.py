@@ -94,14 +94,21 @@ async def startup_event():
     # Clear existing robots
     await db.robots.delete_many({})
     
-    # Create 10 robots in a 5x2 grid
+    # Starting positions for 10 robots (dispersed across the grid)
+    start_positions = [
+        (1, 1), (3, 1), (6, 1), (8, 1),
+        (1, 6), (3, 6), (6, 6), (8, 6),
+        (4, 3), (5, 4)
+    ]
+    
     robots = []
     for i in range(10):
+        pos_x, pos_y = start_positions[i]
         robot = Robot(
             bot_id=f"BOT-{str(i+1).zfill(3)}",
             status="idle",
-            position_x=i % 5,
-            position_y=i // 5,
+            position_x=pos_x,
+            position_y=pos_y,
             battery=random.randint(60, 100)
         )
         doc = robot.model_dump()
@@ -109,7 +116,7 @@ async def startup_event():
         await db.robots.insert_one(doc)
         robots.append(robot)
     
-    logging.info(f"Initialized {len(robots)} robots")
+    logging.info(f"Initialized {len(robots)} robots on warehouse grid")
 
 # Routes
 @api_router.get("/")
