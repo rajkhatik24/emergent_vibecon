@@ -608,6 +608,7 @@ RECOVERY PROCEDURE:
 {common_qa_text}
 {safety_text}
 {escalation_text}
+{technical_info_text}
 
 CRITICAL INSTRUCTIONS:
 1. Track Progress: Remember what the operator has already tried. Don't repeat the same suggestions.
