@@ -647,8 +647,17 @@ Be helpful, specific, and know when professional help is needed."""
         user_message = UserMessage(text=request.message)
         llm_response = await chat.send_message(user_message)
         
+        # Strip any markdown formatting that slipped through
+        cleaned_response = llm_response
+        # Remove **bold**
+        cleaned_response = cleaned_response.replace('**', '')
+        # Remove __underline__
+        cleaned_response = cleaned_response.replace('__', '')
+        # Remove *italic*
+        cleaned_response = cleaned_response.replace('*', '')
+        
         return ChatResponse(
-            response=llm_response,
+            response=cleaned_response,
             session_id=session_id
         )
         
