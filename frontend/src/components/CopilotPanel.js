@@ -184,6 +184,89 @@ const CopilotPanel = ({ isOpen, onClose, robot, copilotData, loading, onClearErr
                 </ol>
               </div>
 
+              {/* Chat Interface */}
+              <div className="chat-section" data-testid="chat-section">
+                <div className="chat-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  <h3>Ask Follow-up Questions</h3>
+                </div>
+
+                {/* Chat messages */}
+                {chatMessages.length > 0 && (
+                  <div className="chat-messages" data-testid="chat-messages">
+                    {chatMessages.map((msg, index) => (
+                      <div 
+                        key={index} 
+                        className={`chat-message ${msg.role}`}
+                        data-testid={`chat-message-${msg.role}-${index}`}
+                      >
+                        <div className="message-avatar">
+                          {msg.role === 'user' ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                              <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5h-1v1.27c.6.34 1 .99 1 1.73 0 1.1-.9 2-2 2s-2-.9-2-2c0-.74.4-1.39 1-1.73V9H9a5 5 0 0 0-5 5H2a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                            </svg>
+                          )}
+                        </div>
+                        <div className="message-content">
+                          <div className="message-role">{msg.role === 'user' ? 'You' : 'AI Copilot'}</div>
+                          <div className="message-text">{msg.content}</div>
+                        </div>
+                      </div>
+                    ))}
+                    {chatLoading && (
+                      <div className="chat-message assistant" data-testid="chat-loading">
+                        <div className="message-avatar">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5h-1v1.27c.6.34 1 .99 1 1.73 0 1.1-.9 2-2 2s-2-.9-2-2c0-.74.4-1.39 1-1.73V9H9a5 5 0 0 0-5 5H2a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                          </svg>
+                        </div>
+                        <div className="message-content">
+                          <div className="message-role">AI Copilot</div>
+                          <div className="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+                )}
+
+                {/* Chat input */}
+                <div className="chat-input-wrapper">
+                  <input
+                    type="text"
+                    className="chat-input"
+                    placeholder="Ask a question... (e.g., 'What if step 1 doesn't work?')"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    disabled={chatLoading}
+                    data-testid="chat-input"
+                  />
+                  <Button
+                    onClick={handleSendMessage}
+                    disabled={!chatInput.trim() || chatLoading}
+                    className="chat-send-btn"
+                    data-testid="chat-send-btn"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="22" y1="2" x2="11" y2="13"/>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+
               {/* Actions */}
               <div className="copilot-actions">
                 <Button
