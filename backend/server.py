@@ -140,49 +140,168 @@ async def get_robot(bot_id: str):
 
 @api_router.post("/robots/simulate")
 async def simulate_robots():
-    """Simulate robot state changes and random errors"""
+    """Simulate robot state changes with grid-based pathfinding and collision avoidance"""
     robots = await db.robots.find({}).to_list(100)
     
+    # Grid dimensions
+    GRID_COLS = 10
+    GRID_ROWS = 8
+    
+    # Define zones
+    picking_zones = [(0, 0), (9, 0), (0, 7), (9, 7)]
+    dropping_zones = [(4, 0), (5, 0), (4, 7), (5, 7)]
+    charging_stations = [(2, 3), (7, 3), (2, 4), (7, 4)]
+    
+    # Create occupancy map
+    occupied_positions = set()
     for robot in robots:
-        # Skip if robot is already in error state (let operator fix it first)
+        if robot.get('position_x') is not None and robot.get('position_y') is not None:
+            occupied_positions.add((robot['position_x'], robot['position_y']))
+    
+    def find_nearest_zone(current_pos, zone_list, occupied):
+        \"\"\"Find nearest available zone using Manhattan distance\"\"\"
+        best_zone = None
+        best_dist = float('inf')
+        
+        for zone in zone_list:
+            if zone not in occupied or zone == current_pos:
+                dist = abs(zone[0] - current_pos[0]) + abs(zone[1] - current_pos[1])
+                if dist < best_dist:
+                    best_dist = dist
+                    best_zone = zone
+        
+        return best_zone if best_zone else zone_list[0]
+    
+    def move_towards(current_pos, target_pos, occupied):
+        \"\"\"Move one step towards target, avoiding collisions\"\"\"
+        x, y = current_pos
+        tx, ty = target_pos
+        
+        # Calculate next position
+        next_x, next_y = x, y
+        
+        # Prioritize horizontal or vertical movement based on distance
+        if abs(tx - x) > abs(ty - y):
+            # Move horizontally
+            if tx > x:
+                next_x = min(x + 1, GRID_COLS - 1)
+            elif tx < x:
+                next_x = max(x - 1, 0)
+        else:
+            # Move vertically
+            if ty > y:
+                next_y = min(y + 1, GRID_ROWS - 1)
+            elif ty < y:
+                next_y = max(y - 1, 0)
+        
+        # Check if next position is occupied
+        if (next_x, next_y) in occupied and (next_x, next_y) != target_pos:
+            # Try alternative direction
+            if next_x == x:  # Was moving vertically, try horizontal
+                if tx > x:
+                    next_x = min(x + 1, GRID_COLS - 1)
+                elif tx < x:
+                    next_x = max(x - 1, 0)
+                next_y = y
+            else:  # Was moving horizontally, try vertical
+                if ty > y:
+                    next_y = min(y + 1, GRID_ROWS - 1)
+                elif ty < y:
+                    next_y = max(y - 1, 0)
+                next_x = x
+        
+        # If still occupied, stay in place
+        if (next_x, next_y) in occupied and (next_x, next_y) != target_pos:
+            return x, y
+        
+        return next_x, next_y
+    
+    for robot in robots:
+        # Skip if robot is already in error state
         if robot['status'] == 'error' and robot.get('error_code'):
             continue
         
-        # Battery drain
+        current_pos = (robot['position_x'], robot['position_y'])\n        
+        # Remove current position from occupied for movement calculation
+        occupied_positions.discard(current_pos)
+        
+        # Battery management
         if robot['status'] != 'charging':
-            robot['battery'] = max(0, robot['battery'] - random.randint(1, 5))
+            robot['battery'] = max(0, robot['battery'] - random.randint(1, 3))
         else:
-            robot['battery'] = min(100, robot['battery'] + random.randint(5, 10))
+            robot['battery'] = min(100, robot['battery'] + random.randint(8, 12))
         
-        # State transitions
+        # State transitions and movement
         if robot['battery'] < 20 and robot['status'] != 'charging':
+            # Low battery - go to charging station
             robot['status'] = 'charging'
-            robot['current_task'] = 'Charging battery'
+            robot['current_task'] = 'Moving to charging station'
+            target = find_nearest_zone(current_pos, charging_stations, occupied_positions)
+            new_x, new_y = move_towards(current_pos, target, occupied_positions)
+            robot['position_x'], robot['position_y'] = new_x, new_y
+            
+            # Check if reached charging station
+            if (new_x, new_y) in charging_stations:
+                robot['current_task'] = 'Charging battery'
+        
         elif robot['battery'] > 80 and robot['status'] == 'charging':
-            robot['status'] = 'idle'
-            robot['current_task'] = None
-        elif robot['status'] == 'idle' and random.random() > 0.6:
-            robot['status'] = 'picking'
-            robot['current_task'] = f'Pick from Zone {random.choice(["A", "B", "C", "D"])}'
-        elif robot['status'] == 'picking' and random.random() > 0.5:
-            robot['status'] = 'dropping'
-            robot['current_task'] = f'Drop to Station {random.randint(1, 5)}'
-        elif robot['status'] == 'dropping' and random.random() > 0.5:
+            # Fully charged - become idle
             robot['status'] = 'idle'
             robot['current_task'] = None
         
-        # Random errors (5% chance)
-        if robot['status'] != 'error' and random.random() < 0.05:
+        elif robot['status'] == 'idle' and random.random() > 0.5:
+            # Start picking task
+            robot['status'] = 'picking'
+            zone_letter = random.choice(['A', 'B', 'C', 'D'])
+            robot['current_task'] = f'Moving to Zone {zone_letter}'
+            target = find_nearest_zone(current_pos, picking_zones, occupied_positions)
+            new_x, new_y = move_towards(current_pos, target, occupied_positions)
+            robot['position_x'], robot['position_y'] = new_x, new_y
+            
+            # Check if reached picking zone
+            if (new_x, new_y) in picking_zones:
+                robot['current_task'] = f'Picking from Zone {zone_letter}'
+        
+        elif robot['status'] == 'picking':
+            # Move towards picking zone if not there yet
+            if current_pos not in picking_zones:
+                target = find_nearest_zone(current_pos, picking_zones, occupied_positions)
+                new_x, new_y = move_towards(current_pos, target, occupied_positions)
+                robot['position_x'], robot['position_y'] = new_x, new_y
+            else:
+                # At picking zone, maybe transition to dropping
+                if random.random() > 0.3:
+                    robot['status'] = 'dropping'
+                    station_num = random.randint(1, 4)
+                    robot['current_task'] = f'Moving to Station {station_num}'
+        
+        elif robot['status'] == 'dropping':
+            # Move towards dropping zone
+            if current_pos not in dropping_zones:
+                target = find_nearest_zone(current_pos, dropping_zones, occupied_positions)
+                new_x, new_y = move_towards(current_pos, target, occupied_positions)
+                robot['position_x'], robot['position_y'] = new_x, new_y
+                
+                if (new_x, new_y) in dropping_zones:
+                    station_num = dropping_zones.index((new_x, new_y)) + 1
+                    robot['current_task'] = f'Dropping at Station {station_num}'
+            else:
+                # At dropping zone, transition to idle
+                if random.random() > 0.4:
+                    robot['status'] = 'idle'
+                    robot['current_task'] = None
+        
+        # Random errors (3% chance)
+        if robot['status'] != 'error' and random.random() < 0.03:
             error_code = random.choice(list(ERRORS_KB.keys()))
             error = ERRORS_KB[error_code]
             robot['status'] = 'error'
             robot['error_code'] = error_code
             robot['error_message'] = error['title']
         
-        # Update position slightly
-        if robot['status'] in ['picking', 'dropping']:
-            robot['position_x'] = max(0, min(4, robot['position_x'] + random.choice([-1, 0, 1])))
-            robot['position_y'] = max(0, min(1, robot['position_y'] + random.choice([-1, 0, 1])))
+        # Add new position to occupied set
+        new_pos = (robot['position_x'], robot['position_y'])
+        occupied_positions.add(new_pos)
         
         robot['updated_at'] = datetime.now(timezone.utc).isoformat()
         
