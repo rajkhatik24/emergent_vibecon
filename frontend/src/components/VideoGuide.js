@@ -44,7 +44,7 @@ const VideoGuide = ({ errorCode, errorTitle, recoverySteps }) => {
         }
         return prev + 1;
       });
-    }, 3000);
+    }, 4000); // Increased to 4 seconds per step
   };
 
   const resetAnimation = () => {
