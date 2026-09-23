@@ -1,0 +1,254 @@
+SICK TiM5xx Series 2D LiDAR Scanner - Error Code Reference Manual
+================================================================================
+Document Version: 8.2.1
+Last Updated: 2024-11-15
+Product: TiM551, TiM561, TiM571 2D LiDAR Scanners
+Manufacturer: SICK AG
+
+================================================================================
+COMMON ERROR CODES
+================================================================================
+
+ERROR 01: CONTAMINATION WARNING
+- Description: Optical window contamination detected
+- Severity: WARNING
+- Symptoms: Reduced detection range, intermittent object detection failures
+- Causes: Dust, dirt, oil, or moisture on protective window
+- Resolution:
+  1. Power off device
+  2. Clean protective window with microfiber cloth and isopropyl alcohol (99%)
+  3. Wipe in circular motion from center outward
+  4. Allow 2 minutes to air dry completely
+  5. Power on and run self-test
+- Prevention: Clean window weekly in dusty environments, monthly in clean rooms
+- Expected Resolution Time: 5-10 minutes
+
+ERROR 02: TEMPERATURE WARNING
+- Description: Internal temperature outside operating range
+- Severity: WARNING
+- Operating Range: -10°C to +50°C (14°F to 122°F)
+- Symptoms: Device shuts down or operates erratically
+- Causes: Ambient temperature too high/low, blocked ventilation, internal fan failure
+- Resolution:
+  1. Check ambient temperature with thermometer
+  2. If >45°C: Improve ventilation, add cooling, reduce heat sources nearby
+  3. If <0°C: Add heating enclosure or move device indoors
+  4. Inspect ventilation slots - clear any blockage
+  5. Listen for internal fan (should be audible hum)
+  6. If fan silent: Contact service - fan replacement needed
+- Prevention: Maintain 15-35°C ambient temperature, keep 10cm clearance around device
+
+ERROR 03: DEVICE MONITORING ERROR
+- Description: Internal self-monitoring detected fault
+- Severity: ERROR (Device may not operate)
+- Symptoms: Device won't scan, status LED red, no measurement output
+- Causes: Internal hardware failure, firmware corruption, power supply issue
+- Resolution:
+  1. Power cycle device (off 30 seconds, on)
+  2. Check power supply: 10-30V DC, minimum 2A
+  3. Verify voltage at device terminals with multimeter
+  4. If voltage correct: Perform factory reset (hold RESET button 10 seconds)
+  5. If error persists: Hardware failure - contact SICK service
+- Escalation: Always escalate if power cycle and reset don't resolve
+
+ERROR 04: APPLICATION ERROR
+- Description: Configuration or application software error
+- Severity: ERROR
+- Symptoms: Incorrect measurements, wrong output format, communication issues
+- Causes: Invalid configuration, incompatible firmware, corrupted parameters
+- Resolution:
+  1. Connect via SOPAS ET software (available at sick.com/sopas)
+  2. Read current configuration - save backup
+  3. Load factory default configuration
+  4. Test device function
+  5. If works: Reconfigure settings carefully, test each change
+  6. If fails: Reflash firmware using SOPAS (latest version on SICK website)
+- Tools Required: PC with SOPAS ET software, USB or Ethernet cable
+- Expected Resolution Time: 20-45 minutes
+
+ERROR 08: CONTAMINATION ERROR
+- Description: Critical contamination level - device non-functional
+- Severity: CRITICAL ERROR
+- Symptoms: No measurements, all readings zero or max range
+- Causes: Severe contamination, water droplets, ice on window
+- Resolution:
+  1. IMMEDIATELY power off device
+  2. Inspect window for: condensation, ice, thick dust layer, chemical residue
+  3. For water/ice: Dry with lint-free cloth, use hair dryer on low heat
+  4. For chemicals: Use SICK cleaning solution (product code: 2123759) or 99% isopropyl alcohol
+  5. For severe contamination: May need window replacement (part code: 2020003)
+  6. After cleaning: Power on, run extended self-test (via SOPAS)
+- If Error Persists After Cleaning: Optical assembly damaged - contact service
+- Cost: Window replacement $150-250, Labor 30-60 min
+
+ERROR 10: DEFECTIVE DEVICE
+- Description: Hardware component failure detected
+- Severity: CRITICAL - DEVICE INOPERABLE
+- Symptoms: Device won't power on, or powers on but no function
+- Causes: Component failure (laser, photodiode, motor), circuit damage, power surge
+- Resolution:
+  NO USER SERVICEABLE REPAIR - Contact SICK Service Immediately
+  1. Document error conditions (when occurred, any events prior)
+  2. Note device serial number (on label)
+  3. Contact SICK service: +1-800-325-9039 (US) or local service center
+  4. Prepare for device return or on-site service visit
+- Typical Repair: $500-1200, 1-2 weeks turnaround
+- Under Warranty: Free if within 36 months of purchase
+
+ERROR 12: ETHERNET COMMUNICATION ERROR
+- Description: Network communication failure
+- Severity: WARNING
+- Symptoms: No data transmission, device not reachable on network
+- Causes: Cable issue, wrong IP configuration, network switch problem
+- Resolution:
+  1. Check Ethernet cable - use Cat5e or better, max length 100m
+  2. Verify cable continuity with cable tester
+  3. Check link LED on device (should be green/orange)
+  4. Verify IP configuration:
+     - Default IP: 192.168.0.1
+     - Default Subnet: 255.255.255.0
+     - Default Gateway: 192.168.0.254
+  5. Ping device from computer: ping 192.168.0.1
+  6. If no response: Connect directly to PC (bypass switch/router)
+  7. Use SOPAS to reconfigure IP if needed
+  8. Check firewall settings on host computer
+- Common Issue: IP address conflict - assign unique IP to device
+
+ERROR 15: SUPPLY VOLTAGE ERROR
+- Description: Power supply voltage outside acceptable range
+- Severity: ERROR
+- Symptoms: Device resets randomly, erratic behavior, won't power on
+- Voltage Requirements:
+  - Nominal: 24V DC
+  - Acceptable Range: 10-30V DC
+  - Recommended: 20-28V DC for optimal performance
+  - Current Draw: 3.5W typical, 5W maximum
+  - Minimum Supply: 2A capacity
+- Resolution:
+  1. Measure voltage at device terminals with multimeter (device powered)
+  2. Measure again under load (device scanning)
+  3. If <20V or >28V: Check power supply output, cable voltage drop
+  4. Check cable gauge: Use 18 AWG minimum for runs up to 10m
+  5. For longer runs: Use 16 AWG or add voltage booster
+  6. Inspect power supply for wear, overheating, or damage
+  7. Check all connections - tighten terminal screws
+- If voltage correct but error persists: Internal power circuit fault - service required
+
+ERROR 17: FREQUENCY ERROR
+- Description: Scan frequency unstable or incorrect
+- Severity: WARNING
+- Symptoms: Irregular scan timing, data jitter, timestamp errors
+- Causes: Electrical noise, motor bearing wear, electronic interference
+- Resolution:
+  1. Check for nearby sources of EMI: welding equipment, large motors, RF transmitters
+  2. Move device >5m from high-power electrical equipment
+  3. Use shielded cables for power and data
+  4. Add ferrite core to power cable near device
+  5. Ensure proper grounding - use dedicated ground wire
+  6. Check motor bearing: Device should spin smoothly, no grinding noise
+  7. If grinding heard: Motor bearing failure - service required ($300-500 repair)
+- Prevention: Avoid high-EMI environments, maintain proper grounding
+
+ERROR 19: DATA OUTPUT ERROR
+- Description: Error in transmitted measurement data
+- Severity: ERROR
+- Symptoms: Corrupted data packets, missing measurements, communication dropouts
+- Causes: High CPU load on receiver, network congestion, buffer overflow
+- Resolution:
+  1. Reduce scan frequency: Change from 15Hz to 10Hz or 5Hz
+  2. Reduce angular resolution: Change from 0.33° to 0.5° or 1°
+  3. Limit measurement range: Set to actual needed range (reduces data volume)
+  4. Increase network bandwidth: Use dedicated network port or VLAN
+  5. Optimize receiver software: Increase buffer size, use faster CPU
+  6. Check network statistics: Packet loss should be <0.1%
+- Configuration via SOPAS: Device → Parameters → Measurement Parameters
+
+ERROR 22: DEVICE DEFECT - MOTOR
+- Description: Scanning motor failure
+- Severity: CRITICAL
+- Symptoms: No rotation, irregular rotation speed, grinding noise
+- Causes: Bearing wear, motor coil failure, debris in motor, excessive vibration
+- Resolution:
+  SERVICE REQUIRED - DO NOT OPERATE DEVICE
+  1. Power off device immediately
+  2. Do not attempt to manually rotate motor
+  3. Document symptoms (noise, behavior before failure)
+  4. Contact SICK service with device serial number
+  5. Typical repair: Motor replacement $400-700, 1-2 weeks
+- Prevention: Avoid high-vibration mounting, check mounting bolts quarterly
+
+ERROR 25: SYNCHRONIZATION ERROR
+- Description: Time synchronization lost with external system
+- Severity: WARNING
+- Symptoms: Timestamp mismatches, coordination issues with other sensors
+- Causes: PTP/NTP server unreachable, network delay, clock drift
+- Resolution:
+  1. Verify PTP/NTP server is reachable (ping server address)
+  2. Check network latency: Should be <10ms for PTP
+  3. Verify synchronization settings in SOPAS
+  4. Restart synchronization: Device → Monitoring → Synchronization → Restart
+  5. Check firewall rules: PTP uses UDP port 319-320, NTP uses UDP port 123
+  6. For critical applications: Use hardware sync input (trigger input)
+- Acceptable Clock Drift: <1ms over 24 hours
+
+================================================================================
+MAINTENANCE SCHEDULE
+================================================================================
+
+DAILY:
+- Visual inspection of device (no damage, proper mounting)
+- Check status LED (should be solid green during operation)
+
+WEEKLY:
+- Clean protective window (more frequent in dusty environments)
+- Check cable connections (tightness, no wear)
+
+MONTHLY:
+- Deep clean protective window
+- Check mounting bolts (torque to 2-3 Nm)
+- Verify network connectivity and data quality
+- Review error logs in SOPAS
+
+QUARTERLY:
+- Verify measurement accuracy with reference target
+- Check ground connection resistance (<1 Ohm)
+- Update firmware if new version available
+- Backup device configuration
+
+ANNUALLY:
+- Professional calibration (optional but recommended)
+- Inspect internal components (by qualified technician)
+- Replace protective window if scratched (affects measurements)
+
+================================================================================
+TECHNICAL SPECIFICATIONS
+================================================================================
+
+Model: SICK TiM5xx Series
+Scanning Angle: 270°
+Angular Resolution: 0.33° to 1° (configurable)
+Scanning Frequency: 5 Hz to 15 Hz
+Measurement Range: 0.05m to 10m (reflectivity >10%)
+Response Time: <70ms at 15Hz
+Laser Class: 1 (eye-safe)
+Power Supply: 10-30V DC, max 5W
+Protection Class: IP65 (dust-tight, water jet protected)
+Operating Temperature: -10°C to +50°C
+Interface: Ethernet (10/100 Mbps), RS-232/RS-422
+Dimensions: 60 x 60 x 86 mm
+Weight: 130g
+MTBF: >50,000 hours
+Warranty: 36 months from purchase
+
+================================================================================
+CONTACT INFORMATION
+================================================================================
+
+SICK AG Technical Support:
+Phone (US): +1-800-325-9039
+Phone (EU): +49-7641-469-0
+Email: support@sick.com
+Website: www.sick.com
+SOPAS Download: sick.com/sopas
+
+Document End

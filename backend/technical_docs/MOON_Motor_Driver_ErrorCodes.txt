@@ -1,0 +1,457 @@
+MOON BLDC Motor Driver - Error Code Reference Manual
+================================================================================
+Document Version: 3.7.2
+Last Updated: 2024-10-08
+Product Series: MOON-150, MOON-300, MOON-600
+Manufacturer: MOON Motion Technologies
+
+================================================================================
+CRITICAL ERROR CODES (Device Protection Shutdown)
+================================================================================
+
+ERROR 01: OVER CURRENT PROTECTION
+- Description: Motor current exceeded safe operating limits
+- Severity: CRITICAL - Immediate shutdown
+- Current Limits:
+  - MOON-150: 150A continuous, 300A peak (2 seconds)
+  - MOON-300: 300A continuous, 600A peak (2 seconds)
+  - MOON-600: 600A continuous, 1200A peak (2 seconds)
+- Symptoms: Motor stops abruptly, driver LED flashes red, error logged
+- Root Causes:
+  1. MOTOR OVERLOAD: Load exceeds motor capacity
+  2. MECHANICAL JAM: Motor shaft stuck or obstructed
+  3. PHASE SHORT: Short circuit in motor windings or cables
+  4. INCORRECT PARAMETERS: Motor parameters mis-configured
+  5. BRAKE ENGAGED: Mechanical brake not releasing
+- Diagnosis Procedure:
+  1. Disconnect motor from mechanical load
+  2. Check motor shaft rotates freely by hand
+  3. Measure motor phase resistance: Should be 0.05-0.5 Ohms per phase
+  4. Inspect motor cables for damage, pinching, or cuts
+  5. Verify motor parameters match motor datasheet
+- Resolution:
+  IMMEDIATE:
+  - Power off driver and motor
+  - Do not restart until cause identified
+  MECHANICAL ISSUE:
+  - Clear obstruction from motor shaft
+  - Check gearbox (if present) for seized bearings
+  - Verify load is within motor specifications
+  ELECTRICAL ISSUE:
+  - Replace damaged motor cables
+  - Check motor winding resistance (call motor manufacturer)
+  - Verify all phase connections tight and correct (U, V, W order)
+  CONFIGURATION:
+  - Re-configure motor parameters: pole pairs, max current, Kv
+  - Reduce acceleration rate in motion profile
+  - Lower maximum torque limit to 80% of motor rating
+- Error Reset: Power cycle driver, press RESET button, or send CAN reset command
+- If Error Persists: Motor or driver hardware failure - professional service required
+- Cost Impact: Motor replacement $500-2000, Driver replacement $800-3000
+
+ERROR 02: OVER VOLTAGE PROTECTION
+- Description: DC bus voltage exceeded maximum safe level
+- Severity: CRITICAL - Immediate shutdown
+- Voltage Limits:
+  - MOON-150: Max 60V DC
+  - MOON-300: Max 80V DC  
+  - MOON-600: Max 100V DC
+- Symptoms: Driver shuts down during deceleration or when motor acts as generator
+- Root Causes:
+  1. REGENERATIVE BRAKING: Motor generates power during deceleration
+  2. EXTERNAL VOLTAGE SPIKE: Power supply voltage surge
+  3. BRAKE RESISTOR FAILURE: Brake resistor disconnected or burned out
+  4. RAPID DECELERATION: Too-fast deceleration creates high voltage
+- Diagnosis:
+  1. Measure DC bus voltage with multimeter at driver terminals
+  2. Check brake resistor: Should be 5-50 Ohms depending on model
+  3. Inspect brake resistor connections (often screw terminals)
+  4. Monitor voltage during deceleration with oscilloscope
+- Resolution:
+  BRAKE RESISTOR:
+  - Verify brake resistor connected (required for inertial loads)
+  - Check resistor value matches driver requirements:
+    - MOON-150: 10-20 Ohms, minimum 100W
+    - MOON-300: 5-10 Ohms, minimum 200W
+    - MOON-600: 2.5-5 Ohms, minimum 400W
+  - Replace burned resistor (appears blackened or cracked)
+  MOTION PROFILE:
+  - Increase deceleration time: Change from 100ms to 500ms+
+  - Reduce maximum speed to decrease kinetic energy
+  - Enable S-curve acceleration profile (smoother)
+  POWER SUPPLY:
+  - Add capacitor bank to bus (470uF-1000uF per 100W load)
+  - Install voltage clamp or TVS diode (talk to electrician)
+  - Use isolated power supply (reduce ground loop voltage spikes)
+- Configuration: Access via CAN bus or USB interface (MOON Studio software)
+- Expected Resolution Time: 30-60 minutes (hardware), 10-20 minutes (software)
+
+ERROR 03: UNDER VOLTAGE LOCKOUT
+- Description: Supply voltage dropped below minimum operating threshold
+- Severity: ERROR - Device non-functional
+- Minimum Voltages:
+  - MOON-150: 12V DC minimum, 24V nominal
+  - MOON-300: 18V DC minimum, 48V nominal
+  - MOON-600: 24V DC minimum, 72V nominal
+- Symptoms: Driver won't enable, motor won't run, power LED dim or off
+- Root Causes:
+  1. WEAK POWER SUPPLY: Undersized supply for application
+  2. VOLTAGE DROP: Long cable runs or undersized wire gauge
+  3. POOR CONNECTIONS: Loose terminals, corroded contacts
+  4. SUPPLY OVERLOAD: Other devices on same supply drawing too much
+- Diagnosis:
+  1. Measure voltage at power supply output: Should match supply rating ±5%
+  2. Measure voltage at driver input: Should be within 1V of supply output
+  3. Difference >1V indicates cable problem
+  4. Measure voltage under load (motor running): Shouldn't drop >10%
+- Resolution:
+  POWER SUPPLY:
+  - Calculate required supply capacity: Motor watts + 30% margin
+  - Upgrade supply if undersized
+  - Typical: 200W motor needs 300W supply (considering efficiency)
+  WIRING:
+  - Cable gauge requirements:
+    - <1m: 18 AWG minimum
+    - 1-3m: 16 AWG minimum  
+    - 3-5m: 14 AWG minimum
+    - >5m: 12 AWG or use voltage booster
+  - Use stranded copper wire, not solid
+  - Twist positive and negative wires together (reduces inductance)
+  CONNECTIONS:
+  - Clean all terminals with contact cleaner
+  - Tighten all screw terminals to specified torque (typically 0.8-1.2 Nm)
+  - Use star washers to prevent loosening from vibration
+  - Check for green corrosion on copper (indicates moisture)
+- Prevention: Periodic connection check (quarterly), use ferrules on stranded wire
+
+ERROR 08: OVER TEMPERATURE WARNING
+- Description: Driver or motor temperature approaching limits
+- Severity: WARNING → ERROR if continues
+- Temperature Limits:
+  - Driver: 85°C warning, 95°C shutdown
+  - Motor: 100°C warning, 120°C shutdown (typical)
+- Symptoms: Reduced performance, torque limiting active, eventual shutdown
+- Root Causes:
+  1. INSUFFICIENT COOLING: Blocked airflow, no heatsink, high ambient
+  2. OVERWORK: Continuous high-power operation
+  3. HIGH AMBIENT: Operating in hot environment (>40°C)
+  4. DAMAGED FAN: Cooling fan failed or obstructed
+- Diagnosis:
+  1. Feel driver heatsink - should be warm but not painful to touch
+  2. Check fan operation - should hear airflow
+  3. Measure ambient temperature - should be <40°C
+  4. Monitor driver temperature via CAN bus (MOON Studio software)
+  5. Check motor temperature - use infrared thermometer or thermocouple
+- Resolution:
+  IMMEDIATE (If >85°C):
+  - Reduce load or speed by 50%
+  - Increase deceleration time (reduces peak power)
+  - Add cooling fan to driver (12V, 80-120mm, 0.5-1.0 CFM)
+  INSTALLATION:
+  - Mount driver vertically (heatsink fins vertical)
+  - Ensure 50mm clearance on all sides for airflow
+  - Mount in coolest area of enclosure
+  - Add ventilation holes in enclosure (intake bottom, exhaust top)
+  - Consider external heatsink (available from MOON: part MOON-HS-xxx)
+  OPERATIONAL:
+  - Duty cycle: 80% max (alternate work/rest periods)
+  - Reduce continuous current limit to 70% of motor rating
+  - Lower maximum speed by 20% (reduces losses)
+  - Enable "Energy Save Mode" during idle periods
+  ENVIRONMENTAL:
+  - If ambient >40°C: Add air conditioning or move equipment
+  - Check for heat sources: motors, transformers, heaters nearby
+  - Use thermal paste between driver and mounting surface
+- Expected Resolution: Immediate (reduce load), 1-2 hours (add cooling)
+
+ERROR 10: HALL SENSOR ERROR
+- Description: Motor hall sensor signals invalid or missing
+- Severity: ERROR - Motor won't run or runs erratically
+- Symptoms: Motor vibrates but doesn't rotate, rough running, error at startup
+- Root Causes:
+  1. DISCONNECTED HALL CABLE: Cable loose or unplugged
+  2. DAMAGED CABLE: Hall sensor wire cut or pinched
+  3. WRONG SEQUENCE: Hall sensors connected in wrong order
+  4. FAILED SENSOR: Hall sensor component failure in motor
+  5. ELECTRICAL NOISE: EMI interfering with hall signals
+- Diagnosis:
+  1. Check hall cable connections at both driver and motor
+  2. Measure hall sensor voltage: Should be 0V and 5V alternating
+  3. Rotate motor by hand - hall signals should change every 60° (for 6-step commutation)
+  4. Verify hall cable isn't routed parallel to power cables (causes noise)
+  5. Check hall sensor power: Should be 5V ±0.5V from driver
+- Resolution:
+  CONNECTIONS:
+  - Reconnect hall cable firmly (usually 5 or 6 pin connector)
+  - Check pin assignment: H1, H2, H3, +5V, GND (refer to motor datasheet)
+  - Verify connector not damaged (bent pins, cracks)
+  CABLE:
+  - Replace damaged hall cable
+  - Use shielded cable for hall sensors (shield to ground at driver end only)
+  - Maximum cable length: 3m (longer needs signal conditioning)
+  - Route hall cable away from power cables (minimum 10cm separation)
+  HALL SEQUENCE:
+  - Try different hall wire order if motor runs backward or rough:
+  - Swap H1 and H3 (changes direction)
+  - Try permutations until smooth operation
+  - Document correct sequence for future reference
+  SENSOR FAILURE:
+  - If all above fail: Motor hall sensors failed (requires motor disassembly)
+  - Alternative: Configure driver for sensorless mode (if supported)
+  - Contact motor manufacturer for hall sensor replacement kit
+- Configuration: MOON Studio → Motor Setup → Hall Sensor Configuration
+- Cost: Hall cable $20-50, Motor repair $200-500
+
+ERROR 14: CAN BUS COMMUNICATION TIMEOUT
+- Description: No CAN messages received within timeout period
+- Severity: WARNING → ERROR (driver may enter safe state)
+- Symptoms: Motor stops responding, commands ignored, heartbeat lost
+- Root Causes:
+  1. CABLE DISCONNECTED: CAN cable loose or unplugged
+  2. TERMINATION MISSING: 120 Ohm termination resistors not installed
+  3. BAUDRATE MISMATCH: Driver and controller using different speeds
+  4. BUS OVERLOAD: Too many devices or too much traffic
+  5. CONTROLLER FAILURE: Main controller stopped sending
+- Diagnosis:
+  1. Check CAN cable connections (CAN-H and CAN-L wires)
+  2. Verify termination: Measure resistance between CAN-H and CAN-L with bus unpowered (should be 60 Ohms if two 120 Ohm terminators present)
+  3. Check baudrate setting: Common rates are 250 kbps, 500 kbps, 1 Mbps
+  4. Use CAN analyzer tool to monitor bus traffic
+  5. Verify driver node ID is unique (no conflicts)
+- Resolution:
+  PHYSICAL:
+  - Reconnect CAN cables (twisted pair, typically orange/yellow)
+  - Install 120 Ohm termination resistors at both ends of bus
+  - Use proper CAN cable (120 Ohm characteristic impedance)
+  - Maximum bus length without repeater: 40m at 1 Mbps, 500m at 100 kbps
+  CONFIGURATION:
+  - Match baudrate on all devices (check with MOON Studio)
+  - Set appropriate timeout: 100-1000ms depending on application
+  - Verify node ID: Each device needs unique ID (1-127)
+  - Enable heartbeat message in controller (typically 10-100ms interval)
+  SOFTWARE:
+  - Reduce message rate if bus saturated (>70% utilization)
+  - Prioritize critical messages (motion commands)
+  - Implement proper error handling in controller software
+- Tools Required: Multimeter, CAN analyzer (optional but helpful)
+- Expected Resolution: 15-45 minutes
+
+ERROR 15: ENCODER ERROR
+- Description: Position encoder signal invalid or lost
+- Severity: ERROR - Position control not possible
+- Symptoms: Position drift, inaccurate positioning, following error
+- Root Causes:
+  1. ENCODER CABLE: Disconnected, damaged, or noisy
+  2. ENCODER FAILURE: Encoder hardware failed
+  3. MECHANICAL: Encoder shaft coupling loose or broken
+  4. ELECTRICAL NOISE: EMI corrupting encoder signals
+  5. WRONG PARAMETERS: Encoder resolution mis-configured
+- Diagnosis:
+  1. Check encoder cable connection (typically 8-15 pins)
+  2. Verify encoder power supply: 5V ±5% or 12V ±10% depending on encoder
+  3. Monitor encoder signals with oscilloscope:
+     - Incremental: Should see square waves on A and B channels
+     - Absolute: Should see serial data on clock and data lines
+  4. Check mechanical coupling: Shaft should be firmly attached
+  5. Verify encoder count matches motor rotation (monitor in MOON Studio)
+- Resolution:
+  CABLE:
+  - Reconnect encoder cable securely
+  - Use shielded cable for encoder (shield grounded at driver end)
+  - Keep encoder cable separate from power cables (20cm minimum)
+  - Maximum length: Incremental 10m, Absolute SSI 50m
+  MECHANICAL:
+  - Tighten encoder coupling (typically set screw or clamp collar)
+  - Check alignment: Encoder shaft and motor shaft should be concentric (±0.1mm)
+  - Verify no axial load on encoder (can damage bearings)
+  CONFIGURATION:
+  - Set correct encoder resolution (PPR - pulses per revolution):
+    - Common values: 1000, 2000, 2500, 4096, 10000 PPR
+  - Verify quadrature mode: x1, x2, or x4 multiplication
+  - Check direction: Reverse if position decreases when motor turns CW
+  ENCODER FAILURE:
+  - Test encoder separately: Apply 5V power, check output signals
+  - If no output: Encoder failed - replacement needed ($50-500 depending on type)
+- Prevention: Protect encoder from shock, vibration, and moisture
+
+ERROR 22: GATE DRIVER FAULT
+- Description: Internal gate driver circuit fault detected
+- Severity: CRITICAL - Driver inoperable
+- Symptoms: Driver won't enable, all phases disabled, power stage protection
+- Root Causes:
+  1. MOSFET FAILURE: Power MOSFET short circuit or damaged
+  2. BOOTSTRAP CAPACITOR: Bootstrap supply failed
+  3. DESATURATION: MOSFET desaturation detected (over-current event)
+  4. SHOOT-THROUGH: High and low side MOSFETs conducted simultaneously
+  5. DRIVER IC FAILURE: Gate driver IC component failure
+- Diagnosis:
+  WARNING: This is an internal hardware fault - limited user diagnosis possible
+  1. Power cycle driver completely (off 60 seconds)
+  2. Disconnect motor from driver (remove U, V, W connections)
+  3. Attempt to enable driver with no motor connected
+  4. If error persists: Internal hardware failure confirmed
+  5. Check for visible damage: burned components, cracked PCB
+- Resolution:
+  USER ACTIONS:
+  - Power off driver immediately
+  - DO NOT attempt to restart repeatedly (can cause further damage)
+  - Document what happened before failure:
+    - What was motor doing?
+    - Any unusual sounds or smells?
+    - Any recent changes to setup?
+  PROFESSIONAL SERVICE REQUIRED:
+  - This fault requires factory repair or replacement
+  - Typical repair: $400-800 (50-70% of new driver cost)
+  - Repair time: 2-4 weeks
+  - Consider replacement if driver >5 years old
+  PREVENTION FOR REPLACEMENT:
+  - Ensure motor parameters correct to avoid overcurrent
+  - Add current limiting in motion controller
+  - Use soft-start feature (ramp up gradually)
+  - Check for intermittent short circuits in motor cables
+- Contact MOON Service: service@moonmotion.com or +1-555-MOON-TEC
+- Warranty: 24 months from purchase - free replacement if manufacturing defect
+
+ERROR 25: EEPROM ERROR
+- Description: Configuration memory read/write failure
+- Severity: WARNING → ERROR
+- Symptoms: Settings not saved, defaults loaded on power-up, parameter errors
+- Root Causes:
+  1. MEMORY WEAR: EEPROM write cycles exhausted (typical life: 100,000 cycles)
+  2. POWER INTERRUPTION: Power lost during write operation
+  3. CORRUPTION: Data corruption from electrical noise or bit errors
+  4. HARDWARE FAILURE: EEPROM chip failure
+- Diagnosis:
+  1. Check if settings persist after power cycle
+  2. Try saving configuration multiple times
+  3. Read EEPROM write cycle count (if available in MOON Studio)
+  4. Review error log for frequency of EEPROM errors
+- Resolution:
+  SOFTWARE:
+  - Restore factory defaults: Hold RESET button for 15 seconds
+  - Reconfigure all parameters manually
+  - Save configuration and verify it persists
+  - If successful: Previous configuration was corrupted
+  HARDWARE:
+  - If error repeats after multiple attempts: Hardware failure
+  - Backup configuration to PC (MOON Studio → Save Config)
+  - Contact service for EEPROM replacement (simple repair, $150-250)
+  PREVENTION:
+  - Don't save configuration unnecessarily (reduces write cycles)
+  - Use parameter sets for different modes instead of frequent saves
+  - Ensure stable power supply during configuration changes
+- Temporary Workaround: Upload configuration at startup from controller
+
+ERROR 30: BRAKE RESISTOR ERROR
+- Description: Brake resistor overheating or disconnected
+- Severity: WARNING → CRITICAL
+- Symptoms: Over-voltage errors during deceleration, reduced braking capability
+- Root Causes:
+  1. RESISTOR OVERHEATING: Excessive regenerative energy
+  2. DISCONNECTED: Resistor not connected or wire broken
+  3. WRONG VALUE: Incorrect resistance value used
+  4. INSUFFICIENT WATTAGE: Resistor can't handle power dissipation
+- Diagnosis:
+  1. Check resistor connection (usually screw terminals labeled BR+/BR-)
+  2. Measure resistance: Should match specified value ±10%
+  3. Feel resistor temperature: Should be warm but <100°C
+  4. Calculate power dissipation:
+     - Formula: P = (V² × duty_cycle) / R
+     - Example: 48V bus, 10% braking = (48² × 0.1) / 10Ω = 23W
+  5. Compare to resistor wattage rating
+- Resolution:
+  SELECTION:
+  - Use resistor value recommended in driver manual:
+    - MOON-150: 10-20Ω, 100W minimum
+    - MOON-300: 5-10Ω, 200W minimum
+    - MOON-600: 2.5-5Ω, 400W minimum
+  - Lower resistance = more braking capability but higher current
+  INSTALLATION:
+  - Mount resistor in free air with 50mm clearance
+  - Use wire rated for resistor temperature (typically 200°C silicone wire)
+  - Mount away from heat-sensitive components
+  - Consider aluminum housing for heat dissipation
+  THERMAL PROTECTION:
+  - Add thermal switch to resistor (NC contact, opens at 120°C)
+  - Connect to driver safety input
+  - If resistor overheats: Driver automatically limits braking
+  ALTERNATIVES:
+  - Reduce deceleration rate (less braking energy)
+  - Increase deceleration time (spreads energy over time)
+  - Return energy to power supply (if supply accepts regeneration)
+- Expected Cost: Brake resistor $20-100 depending on wattage
+
+================================================================================
+DIAGNOSTIC TOOLS & SOFTWARE
+================================================================================
+
+MOON STUDIO SOFTWARE:
+- Free download: www.moonmotion.com/downloads
+- Features:
+  - Real-time monitoring of all parameters
+  - Error log viewing and export
+  - Configuration backup/restore
+  - Oscilloscope function (plot currents, voltages, positions)
+  - Tuning wizard for PID parameters
+  - Firmware update
+- Connection: USB (mini-B) or CAN bus
+- Compatible with Windows 10/11, Linux (with Wine)
+
+HARDWARE TOOLS RECOMMENDED:
+- Multimeter: For voltage, current, resistance checks
+- Oscilloscope: For signal quality analysis (optional but very helpful)
+- CAN analyzer: For CAN bus troubleshooting (optional)
+- Infrared thermometer: For temperature monitoring
+- Wire strippers and crimpers: For cable repair
+
+================================================================================
+TECHNICAL SPECIFICATIONS
+================================================================================
+
+MOON-150:
+- Continuous Current: 150A
+- Peak Current: 300A (2s)
+- Voltage Range: 12-60V DC
+- Control Modes: Torque, Speed, Position
+- Interfaces: CAN, UART, PWM, Analog
+- Protection: IP20 (indoor use)
+- Dimensions: 120 x 80 x 40mm
+- Weight: 450g
+- MTBF: 50,000 hours
+
+MOON-300:
+- Continuous Current: 300A
+- Peak Current: 600A (2s)
+- Voltage Range: 18-80V DC
+- Control Modes: Torque, Speed, Position, FOC
+- Interfaces: CAN, EtherCAT, RS-485
+- Protection: IP54 (dust and splash)
+- Dimensions: 150 x 100 x 50mm
+- Weight: 850g
+- MTBF: 50,000 hours
+
+MOON-600:
+- Continuous Current: 600A
+- Peak Current: 1200A (2s)
+- Voltage Range: 24-100V DC
+- Control Modes: Torque, Speed, Position, FOC, Field-weakening
+- Interfaces: CAN, EtherCAT, Modbus TCP
+- Protection: IP65 (sealed)
+- Dimensions: 180 x 120 x 60mm
+- Weight: 1.5kg
+- MTBF: 100,000 hours
+
+================================================================================
+CONTACT & SUPPORT
+================================================================================
+
+MOON Motion Technologies
+Technical Support Hotline: +1-555-MOON-TEC (666-6832)
+Email: support@moonmotion.com
+Website: www.moonmotion.com
+RMA Requests: rma@moonmotion.com
+
+Support Hours: Monday-Friday, 8 AM - 6 PM EST
+Emergency Support: Available 24/7 for critical applications (premium support plan required)
+
+Document End
