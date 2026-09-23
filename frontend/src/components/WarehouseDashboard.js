@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import RobotGrid from './RobotGrid';
+import WarehouseGrid from './WarehouseGrid';
 import RobotTable from './RobotTable';
 import CopilotPanel from './CopilotPanel';
 import { Toaster } from './ui/sonner';
