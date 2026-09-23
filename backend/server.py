@@ -166,7 +166,7 @@ async def simulate_robots():
             occupied_positions.add((robot['position_x'], robot['position_y']))
     
     def find_nearest_zone(current_pos, zone_list, occupied):
-        \"\"\"Find nearest available zone using Manhattan distance\"\"\"
+        """Find nearest available zone using Manhattan distance"""
         best_zone = None
         best_dist = float('inf')
         
