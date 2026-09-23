@@ -145,6 +145,14 @@ async def startup_event():
 async def root():
     return {"message": "Warehouse Robot AI Copilot API"}
 
+@api_router.get("/technical-docs")
+async def list_technical_docs():
+    """List available technical documentation"""
+    return {
+        "loaded_documents": list(TECHNICAL_DOCS.keys()),
+        "count": len(TECHNICAL_DOCS)
+    }
+
 @api_router.get("/robots", response_model=List[Robot])
 async def get_robots():
     robots = await db.robots.find({}, {"_id": 0}).to_list(100)
