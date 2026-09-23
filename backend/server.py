@@ -524,8 +524,35 @@ async def chat_with_copilot(request: ChatMessage):
         # Create/reuse session for continuous conversation
         session_id = request.session_id or f"chat-{request.bot_id}-{request.error_code}-{datetime.now(timezone.utc).timestamp()}"
         
-        # Build context-rich system message
+        # Build context-rich system message with deep knowledge
         steps_text = "\n".join([f"{i+1}. {step}" for i, step in enumerate(error['steps'])])
+        
+        # Get deep troubleshooting info if available
+        deep_knowledge = TROUBLESHOOTING_KB.get(request.error_code, {})
+        
+        # Build comprehensive context
+        root_causes_text = ""
+        if deep_knowledge and 'root_causes' in deep_knowledge:
+            root_causes_text = "\n\nDEEP TROUBLESHOOTING KNOWLEDGE:\n"
+            for idx, cause in enumerate(deep_knowledge['root_causes'], 1):
+                root_causes_text += f"\n{idx}. ROOT CAUSE: {cause['cause']}\n"
+                root_causes_text += f"   Symptoms: {', '.join(cause['symptoms'])}\n"
+                root_causes_text += f"   Diagnosis: {cause['diagnosis']}\n"
+                root_causes_text += f"   Advanced Steps: {'; '.join(cause['advanced_steps'][:3])}...\n"
+        
+        common_qa_text = ""
+        if deep_knowledge and 'common_operator_questions' in deep_knowledge:
+            common_qa_text = "\n\nCOMMON OPERATOR QUESTIONS & ANSWERS:\n"
+            for qa in deep_knowledge['common_operator_questions']:
+                common_qa_text += f"Q: {qa['question']}\nA: {qa['answer']}\n\n"
+        
+        safety_text = ""
+        if deep_knowledge and 'safety_warnings' in deep_knowledge:
+            safety_text = "\n\nSAFETY WARNINGS: " + "; ".join(deep_knowledge['safety_warnings'])
+        
+        escalation_text = ""
+        if deep_knowledge and 'escalation_criteria' in deep_knowledge:
+            escalation_text = "\n\nESCALATE TO TECHNICIAN IF: " + "; ".join(deep_knowledge['escalation_criteria'])
         
         system_message = f"""You are an expert AI assistant helping warehouse operators fix robot issues. You're assisting with robot {request.bot_id}.
 
