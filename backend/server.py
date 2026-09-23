@@ -322,17 +322,17 @@ Return ONLY the video generation prompt, nothing else. Keep it under 400 charact
                 message="Replicate API key not configured. Please add REPLICATE_API_TOKEN to .env file. Get your free key at replicate.com (50 videos/month free tier)."
             )
         
-        # Generate video using Replicate (AnimateDiff model - free tier friendly)
+        # Generate video using Replicate (Stable Video Diffusion - established model)
         logging.info("Starting video generation with Replicate...")
         
+        # Note: SVD requires an image input, so we'll use a simple text-to-video model instead
         output = await asyncio.to_thread(
             replicate.run,
-            "lucataco/animate-diff:1531004ee4c98894ab11f3a03e03ab6b339c8888e93503fa292bdc0ff8a870f7",
+            "anotherjesse/zeroscope-v2-xl:9f747673945c62801b13b84701c783929c0ee784e4748ec062204894dda1a351",
             input={
                 "prompt": video_prompt,
-                "num_frames": 16,
-                "guidance_scale": 7.5,
-                "num_inference_steps": 25
+                "num_frames": 24,
+                "num_inference_steps": 50
             }
         )
         
