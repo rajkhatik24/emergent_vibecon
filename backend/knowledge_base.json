@@ -1,222 +1,308 @@
 {
   "troubleshooting_guides": {
-    "ERR_007": {
-      "error_code": "ERR_007",
-      "title": "Gripper Malfunction",
+    "ERR_001": {
+      "error_code": "ERR_001",
+      "title": "Sensor Malfunction",
+      "severity": "HIGH",
+      "average_resolution_time": "15-30 minutes",
       "root_causes": [
         {
-          "cause": "Hydraulic/Pneumatic Pressure Loss",
-          "symptoms": ["Gripper moves slowly", "Weak grip force", "Hissing sounds"],
-          "diagnosis": "Check pressure gauge - normal range is 80-120 PSI. Below 60 PSI indicates leak or compressor issue.",
+          "cause": "Dirty or Obstructed Sensor Lens",
+          "likelihood": "VERY HIGH (60%)",
+          "symptoms": ["Intermittent readings", "Robot stops randomly", "Sensor reads max distance constantly", "Visible dust/debris on lens"],
+          "diagnosis": "Visual inspection of proximity sensors (usually 4-6 sensors around robot body). Look for dust, oil film, plastic film, or fingerprints on lens surface. Sensor lens should be clear and shiny.",
+          "tools_needed": ["Microfiber cloth", "Isopropyl alcohol (70%)", "Compressed air can", "Flashlight"],
           "advanced_steps": [
-            "Locate pressure gauge on gripper unit (usually on side panel)",
-            "Normal operating pressure: 80-120 PSI",
-            "If below 60 PSI: Check air compressor is running and set to correct PSI",
-            "Inspect all pneumatic lines for visible damage or disconnection",
-            "Listen for hissing sounds indicating air leaks",
-            "If leak found: Mark location, power off robot, call technician",
-            "If no leak but low pressure: Compressor may need service"
-          ]
+            "STEP 1 - LOCATE SENSORS: Find all proximity sensors (typically black circular units 2-3cm diameter on robot sides/front/back)",
+            "STEP 2 - VISUAL CHECK: Use flashlight to inspect each sensor lens for contamination",
+            "STEP 3 - CLEAN GENTLY: Dampen microfiber cloth with isopropyl alcohol (NOT water)",
+            "STEP 4 - WIPE LENS: Gently wipe lens in circular motion, don't press hard",
+            "STEP 5 - DRY: Let air dry 30 seconds or use dry cloth",
+            "STEP 6 - BLOW DEBRIS: Use compressed air to remove particles from sensor housing (hold can upright, 15cm distance)",
+            "STEP 7 - TEST: Power on robot, wave hand 5-20cm from sensor - LED should blink or robot should respond",
+            "STEP 8 - REPEAT: Clean all sensors (front, back, left, right sides)",
+            "EXPECTED RESULT: Sensor LED blinks when object detected, robot navigates smoothly without random stops"
+          ],
+          "prevention": "Clean sensors weekly in dusty environments, install protective covers if available"
         },
         {
-          "cause": "Worn Gripper Pads",
-          "symptoms": ["Items slipping", "Inconsistent grip", "Visible wear on pads"],
-          "diagnosis": "Inspect gripper pads for cracks, tears, smooth surfaces, or uneven wear. Pads should have texture/grip pattern.",
+          "cause": "Loose or Damaged Sensor Cable",
+          "likelihood": "MEDIUM (25%)",
+          "symptoms": ["Sensor works intermittently", "Error appears when robot moves/vibrates", "Connection feels loose", "Visible wire damage"],
+          "diagnosis": "Trace sensor cable from sensor unit to main control board. Check for loose connectors (should click firmly), pinched cables, cuts, or exposed wires.",
+          "tools_needed": ["Flashlight", "Small screwdriver (Phillips)", "Cable ties (if replacement needed)"],
           "advanced_steps": [
-            "Power off robot for safety",
-            "Visually inspect both gripper pads (top and bottom)",
-            "Look for: cracks, tears, smooth/shiny surfaces, missing chunks",
-            "Check if texture/grip pattern is still visible",
-            "Measure pad thickness if possible (should be >5mm)",
-            "If pads look worn: This requires technician replacement",
-            "IMPORTANT: Pad replacement involves removing gripper assembly - DO NOT attempt without training"
-          ]
+            "STEP 1 - POWER OFF: Completely power down robot and engage emergency stop",
+            "STEP 2 - LOCATE CABLE: Follow cable from faulty sensor to connection point (usually at robot base or control box)",
+            "STEP 3 - INSPECT CONNECTOR: Check connector for bent pins, corrosion, or foreign material",
+            "STEP 4 - CHECK CABLE PATH: Look for pinch points, sharp bends (radius should be >2cm), or cable rubbing against metal",
+            "STEP 5 - RESEAT CONNECTOR: Unplug connector, inspect pins, firmly reinsert until you hear/feel click",
+            "STEP 6 - SECURE CABLE: Ensure cable is properly routed and secured with cable ties, not hanging loose",
+            "STEP 7 - WIGGLE TEST: Gently move cable while monitoring - if loose connection, will see intermittent contact",
+            "STEP 8 - POWER TEST: Turn on robot, test sensor function before resuming operations",
+            "IF DAMAGED CABLE FOUND: Mark location with tape, document with photo, call technician - cable replacement requires proper routing and connector crimping"
+          ],
+          "prevention": "Inspect cables monthly, ensure proper cable management, avoid sharp bends"
         },
         {
-          "cause": "Mechanical Obstruction",
-          "symptoms": ["Gripper won't open/close fully", "Grinding noise", "Stuck at one position"],
-          "diagnosis": "Foreign object lodged in gripper mechanism or debris buildup.",
+          "cause": "Electromagnetic Interference (EMI)",
+          "likelihood": "LOW (10%)",
+          "symptoms": ["Errors only near certain equipment", "Multiple sensors fail simultaneously", "Radio/wireless equipment nearby"],
+          "diagnosis": "Occurs near high-power electrical equipment, wireless transmitters, or metal structures. Test by moving robot to different area - if error disappears, it's EMI.",
+          "tools_needed": ["None for diagnosis"],
           "advanced_steps": [
-            "Power off robot completely",
-            "Manually try to move gripper (should have slight resistance but move)",
-            "If completely stuck: DO NOT force it - call technician",
-            "If moves but feels gritty: debris in tracks",
-            "Use flashlight to inspect gripper tracks and joints",
-            "Look for: cardboard pieces, plastic wrap, dust buildup, metal shavings",
-            "If debris visible: Use compressed air to blow out (wear safety glasses)",
-            "If object stuck: Carefully remove with tweezers/pliers",
-            "After cleaning: Test gripper in manual mode before resuming operations"
-          ]
+            "STEP 1 - IDENTIFY PATTERN: Note where errors occur (near forklifts, metal shelving, charging stations, wireless routers)",
+            "STEP 2 - TEST ELSEWHERE: Move robot to open area away from equipment - if sensors work, it's EMI",
+            "STEP 3 - CHECK NEARBY: Look for: welding equipment, large motors, radio transmitters, metal detectors, high-voltage cables",
+            "STEP 4 - DOCUMENT: Mark problematic zones on warehouse map",
+            "STEP 5 - SHORT TERM: Route robots around problematic areas, adjust patrol paths",
+            "STEP 6 - LONG TERM: Contact technician for sensor shielding upgrade or EMI filtering installation",
+            "COMMON EMI SOURCES: Arc welders (25m radius), industrial microwaves (10m), high-power WiFi (5m), AC motors >50HP (15m)"
+          ],
+          "prevention": "Keep robots 10m+ from high-power equipment, install EMI shields on sensors"
         },
         {
-          "cause": "Electrical/Sensor Issue",
-          "symptoms": ["Gripper doesn't respond to commands", "Random opening/closing", "Error codes on display"],
-          "diagnosis": "Faulty sensor, loose cable connection, or control board issue.",
+          "cause": "Sensor Hardware Failure",
+          "likelihood": "LOW (5%)",
+          "symptoms": ["Sensor never responds", "Always reads zero or max", "LED doesn't light up", "Physical damage visible"],
+          "diagnosis": "After cleaning and cable check, if sensor still doesn't work, it's likely hardware failure. Sensor life expectancy: 3-5 years.",
+          "tools_needed": ["Multimeter (for technician)"],
           "advanced_steps": [
-            "Check gripper control cable connection at robot base",
-            "Look for loose, damaged, or corroded connectors",
-            "Firmly reseat all connectors (push until you hear click)",
-            "Check for bent pins in connectors",
-            "Inspect cable for cuts, pinches, or wear along entire length",
-            "If control panel shows error codes: Note down exact code numbers",
-            "Test gripper sensors: Use manual mode, wave hand near gripper",
-            "Sensors should detect objects 2-5cm away",
-            "If sensors don't respond or cable damaged: Call technician",
-            "This is an electrical issue requiring trained repair"
-          ]
+            "CONFIRM OTHER CAUSES ELIMINATED: Must have tried cleaning, cable reseating, and EMI testing first",
+            "CHECK SENSOR AGE: Look for manufacturing date on sensor or check maintenance logs (sensors typically last 3-5 years)",
+            "VISUAL DAMAGE CHECK: Look for cracks, burned components, water damage, impact damage",
+            "COMPARE TO WORKING SENSOR: Check if other sensors on same robot work - helps rule out power supply issue",
+            "TECHNICIAN REQUIRED: Hardware replacement needs: proper sensor calibration, bracket mounting, cable routing, system recalibration",
+            "TYPICAL PARTS: Sensor unit cost $150-300, Installation 30-60 min, Includes calibration",
+            "TEMPORARY WORKAROUND: If robot has multiple redundant sensors, technician may temporarily disable failed one and adjust sensitivity on remaining sensors"
+          ],
+          "prevention": "Regular maintenance, avoid physical impacts, protect from water/chemicals"
         }
       ],
       "common_operator_questions": [
         {
-          "question": "Gripper looks fine but still won't work",
-          "answer": "If visual inspection shows no issues, the problem is likely hydraulic pressure, electrical, or internal mechanical. Check the pressure gauge first (should be 80-120 PSI). If pressure is normal, this requires technician diagnosis with specialized tools to test sensors and control circuits."
+          "question": "I cleaned the sensor but error still appears",
+          "answer": "If cleaning didn't work: 1) Check the sensor cable connection - unplug and firmly reseat it. 2) Test in a different warehouse area (might be EMI). 3) Check if other sensors work (could be power supply issue). 4) Look for visible damage to sensor unit. If all these check out, sensor hardware has likely failed and needs technician replacement (typical cost $150-300, takes 30-60 minutes)."
         },
         {
-          "question": "How do I know if it's the pads or something else?",
-          "answer": "If gripper opens and closes normally but can't hold items securely, it's usually the pads. If gripper won't move at all, or moves erratically, it's likely mechanical or electrical. If gripper moves but makes noise or feels rough, it's probably debris or worn bearings."
+          "question": "How do I know which sensor is faulty?",
+          "answer": "Robot typically has 4-6 sensors (front, back, left, right, sometimes top/bottom). To identify faulty one: 1) Check robot error display - may show 'Sensor 1', 'Front Sensor', etc. 2) Wave hand near each sensor individually - working sensors will trigger response (LED blink or robot stops). 3) Look for sensor with no LED activity. 4) Check maintenance panel in robot software - usually shows sensor status individually with PASS/FAIL indicators."
         },
         {
-          "question": "Can I replace the pads myself?",
-          "answer": "No - gripper pad replacement requires: 1) Removing gripper assembly (involves disconnecting hydraulics and electrics), 2) Proper torque specifications for reassembly, 3) Pressure testing after installation, 4) Recalibration of grip force sensors. This MUST be done by a trained technician. Attempting DIY replacement can cause hydraulic leaks, electrical shorts, or safety hazards."
+          "question": "Can robot operate with one sensor not working?",
+          "answer": "NO - do not operate robot with faulty sensor. Reasons: 1) Safety hazard - robot can't detect obstacles on that side, may collide with people/equipment. 2) Navigation issues - robot uses all sensors for positioning, missing data causes erratic movement. 3) Liability - company is responsible for accidents if operating with known sensor fault. 4) May damage other components trying to compensate. Keep robot offline until repaired."
         },
         {
-          "question": "Gripper opens but won't close",
-          "answer": "This is usually a one-way valve issue in the hydraulic system or a sensor stuck in 'open' position. First: Check if the pressure gauge drops when trying to close (indicates hydraulic leak). Second: Ensure nothing is blocking the close sensor. This typically requires technician service to replace the valve or sensor."
+          "question": "What causes sensors to fail frequently?",
+          "answer": "Common causes of repeated sensor failures: 1) DUSTY ENVIRONMENT - implement more frequent cleaning schedule (weekly instead of monthly). 2) CHEMICAL EXPOSURE - certain cleaning agents damage sensor lens, use only approved cleaners. 3) PHYSICAL IMPACTS - robot hitting shelving/walls, install protective bumpers. 4) MOISTURE - humidity or water spray, install protective covers. 5) VIBRATION - mounting screws loose, check/tighten monthly. 6) EMI - near electrical equipment, install EMI shielding. Address root environmental cause, not just replace sensors repeatedly."
         },
         {
-          "question": "What if lubrication doesn't help?",
-          "answer": "If lubrication doesn't improve movement, the issue is likely: 1) Internal bearing wear (requires replacement), 2) Bent or damaged gripper arms (requires realignment or replacement), or 3) Motor/actuator failure. All of these require technician service. Don't force the gripper or over-lubricate as this can cause damage."
+          "question": "How often should sensors be cleaned?",
+          "answer": "NORMAL WAREHOUSE: Monthly. DUSTY/INDUSTRIAL: Weekly. HIGH-DUST (concrete cutting, sanding): Every 2-3 days. FOOD/PHARMA (clean rooms): Monthly is usually sufficient. OUTDOOR ROBOTS: After rain or weekly. You can tell sensors need cleaning when: 1) Robot pauses more frequently. 2) Visible dust/film on lens. 3) Error logs show increasing sensor-related issues. 4) LED response seems delayed. Set reminders based on your environment - preventive cleaning is much faster than troubleshooting failures."
         }
       ],
-      "related_issues": ["ERR_006 (Payload Overload)", "ERR_001 (Sensor Malfunction)"],
+      "technical_specifications": {
+        "sensor_types": "Ultrasonic or Infrared proximity sensors",
+        "detection_range": "5cm to 300cm (model dependent)",
+        "response_time": "<50 milliseconds",
+        "operating_voltage": "12-24V DC",
+        "detection_angle": "15-30 degrees cone",
+        "typical_lifespan": "3-5 years (20,000 operating hours)",
+        "cleaning_solution": "70% Isopropyl alcohol only - NO water, acetone, or harsh chemicals"
+      },
+      "related_issues": ["ERR_008 (Navigation Error)", "ERR_003 (Path Obstruction)", "ERR_014 (Collision Avoidance Alert)"],
       "safety_warnings": [
-        "Always power off robot before inspecting gripper",
-        "Never put hands near gripper when robot is powered on",
-        "Hydraulic fluid under pressure - don't disconnect lines",
-        "Wear safety glasses when using compressed air",
-        "If gripper suddenly releases during operation, items may fall"
+        "CRITICAL: Always power off robot before touching sensors or cables",
+        "Do not use water to clean sensors - use isopropyl alcohol only",
+        "Never operate robot with known faulty sensor - creates collision hazard",
+        "When cleaning, avoid spraying liquid directly on sensor - may enter housing",
+        "Do not touch sensor lens with bare hands - oils from skin reduce performance"
       ],
       "escalation_criteria": [
-        "Visible hydraulic fluid leak",
-        "Pressure below 60 PSI with no obvious cause",
-        "Electrical sparking or burning smell",
-        "Gripper arm bent or damaged",
-        "Internal mechanical grinding noise",
-        "Pad replacement needed",
-        "Basic troubleshooting steps don't resolve issue"
+        "Sensor cleaned but still fails",
+        "Cable damaged or connector has bent pins",
+        "Sensor hardware physically damaged (cracks, burn marks)",
+        "Multiple sensors failing simultaneously",
+        "Sensor older than 5 years",
+        "EMI issues requiring shielding installation",
+        "Error persists after all basic troubleshooting"
+      ],
+      "cost_estimates": {
+        "sensor_replacement_parts": "$150-300 per sensor",
+        "labor_time": "30-60 minutes",
+        "cable_replacement": "$50-100",
+        "cleaning_supplies": "$10-20",
+        "total_typical_repair": "$200-400"
+      },
+      "preventive_maintenance": [
+        "Clean sensors monthly (weekly in dusty environments)",
+        "Inspect cables quarterly for wear",
+        "Check sensor response quarterly (wave hand test)",
+        "Review error logs monthly for increasing sensor issues",
+        "Replace sensors proactively after 4-5 years",
+        "Document cleaning dates in maintenance log"
       ]
     },
-    "ERR_013": {
-      "error_code": "ERR_013",
-      "title": "Wheel Slippage Detected",
+    "ERR_002": {
+      "error_code": "ERR_002",
+      "title": "Low Battery Critical",
+      "severity": "CRITICAL",
+      "average_resolution_time": "15-90 minutes (charge time dependent)",
       "root_causes": [
         {
-          "cause": "Wet or Contaminated Floor",
-          "symptoms": ["Wheels spin without moving", "Robot drifts sideways", "Visible wet spots"],
-          "diagnosis": "Check floor surface for water, oil, cleaning solution, or other liquids. Even small amounts can cause slippage.",
+          "cause": "Normal Battery Discharge",
+          "likelihood": "VERY HIGH (70%)",
+          "symptoms": ["Battery below 5%", "Long time since last charge", "Heavy usage day"],
+          "diagnosis": "This is normal operation - battery simply needs recharging. Robot should auto-navigate to charging station.",
+          "tools_needed": ["None"],
           "advanced_steps": [
-            "Stop robot immediately - continued slippage damages wheels",
-            "Inspect floor around robot for wet spots (3-5 meter radius)",
-            "Check if liquid is: water (clean), oil (slippery/greasy), or cleaning solution (sudsy)",
-            "For water: Use mop and dry thoroughly, set up fans if available",
-            "For oil/grease: Use degreaser and safety absorbent pads, then mop",
-            "For cleaning solution: May indicate scheduled cleaning in progress - coordinate with cleaning staff",
-            "Place 'Wet Floor' signs and caution tape around area",
-            "DO NOT move robot until floor is completely dry",
-            "Test dryness: Paper towel should come away completely dry when pressed to floor",
-            "After floor is dry: Inspect and clean robot wheels before resuming"
-          ]
+            "STEP 1 - VERIFY AUTO-CHARGE: Robot should automatically navigate to nearest available charging dock",
+            "STEP 2 - CLEAR PATH: Ensure path to charging station is clear of obstacles, pallets, or people",
+            "STEP 3 - CHECK DOCK: Confirm charging dock power is on (usually has green LED indicator)",
+            "STEP 4 - MONITOR APPROACH: Watch robot navigate to dock - should slow down and align carefully",
+            "STEP 5 - CONFIRM CONNECTION: Robot should dock with contacts aligned, hear 'click' sound",
+            "STEP 6 - CHARGING INDICATOR: Look for charging status - LED turns orange/red, battery icon shows lightning bolt",
+            "STEP 7 - WAIT 15 MINUTES: Battery should reach 20% in 15-20 minutes (fast charge mode)",
+            "STEP 8 - FULL CHARGE: Complete charge to 100% takes 60-90 minutes depending on battery size",
+            "NORMAL CHARGE RATE: 1-1.5% per minute in fast charge mode, 0.5-0.8% in normal mode",
+            "IF CHARGING SLOWER: Check contact points for corrosion, verify dock output voltage (should be 48-52V DC)"
+          ],
+          "prevention": "Schedule charging during low-activity periods, don't wait until <10%"
         },
         {
-          "cause": "Worn Wheel Treads",
-          "symptoms": ["Consistent slippage in all areas", "Smooth wheel surface", "Reduced traction"],
-          "diagnosis": "Inspect wheel treads for wear. New wheels have 3-4mm deep tread pattern. Worn wheels appear smooth or have <1mm tread depth.",
+          "cause": "Charging Dock Malfunction",
+          "likelihood": "MEDIUM (20%)",
+          "symptoms": ["Robot docks but doesn't charge", "Charging LED doesn't turn on", "Charge rate extremely slow", "Dock LED off or red"],
+          "diagnosis": "Robot reaches dock but battery doesn't charge or charges very slowly (<0.3% per minute). Issue is with dock, not robot.",
+          "tools_needed": ["Multimeter (for voltage check)", "Cleaning cloth", "Contact cleaner"],
           "advanced_steps": [
-            "Power off robot and engage parking brake",
-            "Inspect each wheel (robot typically has 4 wheels)",
-            "Look for tread pattern depth - should be 3-4mm for new, minimum 1.5mm for safe operation",
-            "Check for: smooth/bald spots, uneven wear (one side more worn), cracks in rubber",
-            "Measure tread depth with ruler if possible",
-            "If tread depth below 1.5mm: Wheels need replacement - call technician",
-            "If uneven wear: May indicate alignment issue - requires technician diagnosis",
-            "Typical wheel life: 12-18 months depending on usage",
-            "DO NOT operate robot with worn wheels - safety hazard"
-          ]
+            "STEP 1 - CHECK DOCK POWER: Verify dock power cable is plugged in and outlet has power (test with multimeter or plug in phone charger)",
+            "STEP 2 - DOCK LED STATUS: Green = ready, Orange = charging in progress, Red = fault, Off = no power",
+            "STEP 3 - INSPECT CONTACTS: Look at charging contacts on both robot and dock",
+            "STEP 4 - CONTACT CLEANING: Use contact cleaner spray or isopropyl alcohol on cloth to clean contacts on both sides",
+            "STEP 5 - CHECK ALIGNMENT: Contacts should align perfectly when docked - even 2-3mm misalignment prevents charging",
+            "STEP 6 - VOLTAGE TEST (if trained): Measure dock output voltage with multimeter - should be 48-52V DC when robot not connected",
+            "STEP 7 - TEST OTHER ROBOT: If another robot charges fine on same dock, issue is with first robot's charging port",
+            "STEP 8 - TEST OTHER DOCK: If robot charges fine on different dock, issue is with first dock",
+            "STEP 9 - CIRCUIT BREAKER: Check facility breaker panel - charging dock circuits sometimes trip (usually 20A breakers)",
+            "STEP 10 - RESET DOCK: Power cycle dock (unplug 30 seconds, plug back in) then retry",
+            "IF DOCK FAULTY: Call maintenance - typical issues are power supply failure ($200-500) or contact spring wear ($50-100)"
+          ],
+          "prevention": "Clean dock contacts monthly, test dock voltage quarterly, keep dock area dry"
         },
         {
-          "cause": "Debris on Wheels",
-          "symptoms": ["Recent onset slippage", "Visible debris", "Vibration during movement"],
-          "diagnosis": "Plastic wrap, tape, cardboard, or other materials wrapped around wheels reducing traction.",
+          "cause": "Battery Degradation",
+          "likelihood": "MEDIUM (8%)",
+          "symptoms": ["Battery drains faster than before", "Charge doesn't last full shift", "Battery over 3 years old", "Voltage drops quickly under load"],
+          "diagnosis": "Normal battery aging - capacity decreases over time. Lithium batteries lose ~20% capacity after 2-3 years of daily use.",
+          "tools_needed": ["Maintenance log (to check battery age)"],
           "advanced_steps": [
-            "Power off robot completely",
-            "Visually inspect each wheel for debris",
-            "Common debris: plastic wrap, packing tape, labels, cardboard, wire, hair/fiber buildup",
-            "Manually rotate each wheel to see all sides",
-            "To remove debris:",
-            "- For plastic wrap/tape: Carefully cut and peel away (use safety knife)",
-            "- For stuck material: Scrape with plastic scraper (don't use metal - damages rubber)",
-            "- For fiber buildup: Use stiff brush to clean tread grooves",
-            "Clean each wheel thoroughly before moving to next one",
-            "After cleaning: Rotate wheels by hand - should spin freely without wobble",
-            "If wobble detected: Bearing issue - call technician"
-          ]
+            "STEP 1 - CHECK BATTERY AGE: Look for manufacturing date sticker on battery or check installation records",
+            "STEP 2 - CAPACITY TEST: Fully charge battery, run robot continuously, measure how long until 20%",
+            "STEP 3 - COMPARE TO BASELINE: New battery should run 6-8 hours continuous operation, degraded battery 4-5 hours",
+            "STEP 4 - VOLTAGE SAG TEST: Check battery voltage under load vs idle - >5V drop indicates aging cells",
+            "STEP 5 - REVIEW LOGS: Check maintenance software for battery health score (usually 0-100%, <70% needs replacement)",
+            "STEP 6 - CYCLE COUNT: Batteries rated for 1000-1500 charge cycles, after that capacity drops significantly",
+            "BATTERY LIFESPAN FACTORS:",
+            "- DAILY USE: 2-3 years typical",
+            "- FREQUENT DEEP DISCHARGE: Reduces life 20-30%",
+            "- HIGH TEMPERATURE (>30C): Reduces life 30-40%",
+            "- KEPT AT 100% ALWAYS: Reduces life 10-20%",
+            "OPTIMAL: Keep battery 40-80% when not in use, avoid deep discharge below 10%",
+            "STEP 7 - REPLACEMENT NEEDED: If battery <70% capacity or >3 years old with performance issues",
+            "COST: Battery replacement $800-2000 depending on size, takes 1-2 hours labor"
+          ],
+          "prevention": "Avoid deep discharge, keep temperature moderate, replace batteries proactively after 3 years"
         },
         {
-          "cause": "Overloaded Robot",
-          "symptoms": ["Slippage only when carrying heavy loads", "Wheels flatten under weight", "Robot sluggish"],
-          "diagnosis": "Robot carrying more weight than designed capacity, causing wheel deformation and reduced traction.",
+          "cause": "Robot Overworked / Task Load Too High",
+          "likelihood": "LOW (2%)",
+          "symptoms": ["Battery drains faster on certain days", "Drains quickly when carrying heavy loads", "Fine when idle but drops fast when working"],
+          "diagnosis": "Robot assigned too many tasks or carrying loads beyond optimal range, causing excessive power consumption.",
+          "tools_needed": ["Task management software access"],
           "advanced_steps": [
-            "Check robot load capacity specification (usually 100-500 kg depending on model)",
-            "Weigh current payload if possible (use scale or check package weight labels)",
-            "If overloaded: Remove items until within capacity",
-            "Inspect wheels after overload event:",
-            "- Look for flat spots on wheels (indicates sustained overload damage)",
-            "- Check for bulging or deformed wheel sidewalls",
-            "- Test wheel firmness (should be firm, not soft/squishy)",
-            "If wheels damaged from overload: Requires replacement by technician",
-            "Prevent future: Train staff on weight limits, add warning labels, install load sensors",
-            "Consider splitting heavy loads across multiple trips"
-          ]
+            "STEP 1 - REVIEW TASK LOG: Check how many tasks assigned vs completed, look for increasing backlog",
+            "STEP 2 - CHECK PAYLOAD: Review typical weights carried - should be within 70% of max capacity for efficient operation",
+            "STEP 3 - ANALYZE ROUTES: Long routes with many turns consume more power than straight paths",
+            "STEP 4 - MONITOR SPEED: Robot running at max speed constantly uses 30-40% more battery than moderate speed",
+            "STEP 5 - CHECK ACCELERATION: Frequent start/stop cycles drain battery faster than smooth continuous movement",
+            "STEP 6 - FLOOR CONDITION: Rough floors, inclines, or obstacles force robot to work harder",
+            "POWER CONSUMPTION RATES:",
+            "- IDLE: 50-80W",
+            "- MOVING EMPTY: 150-250W",
+            "- MOVING WITH 50% LOAD: 250-350W",
+            "- MOVING WITH MAX LOAD: 400-500W",
+            "- CLIMBING 5° RAMP: +100W",
+            "STEP 7 - OPTIMIZE: Reduce max speed 10-20%, limit acceleration, optimize routes, balance load across fleet",
+            "STEP 8 - ADD CHARGING BREAKS: If shifts >8 hours, schedule 15-min charge breaks at 40-50% battery"
+          ],
+          "prevention": "Balance workload, optimize routes, avoid overloading, schedule mid-shift charge breaks"
         }
       ],
       "common_operator_questions": [
         {
-          "question": "Floor looks dry but robot still slips",
-          "answer": "The floor may have invisible residue (cleaning solution film, oil film, or concrete dust). Try these: 1) Wipe a small area with white cloth - if cloth shows dirt/residue, floor needs deeper cleaning. 2) Check if floor was recently cleaned (residue can remain 30-60 minutes). 3) Test different floor area - if no slippage elsewhere, it's definitely floor issue. 4) Consider floor material - some tiles become slippery when polished."
+          "question": "How long does charging take?",
+          "answer": "QUICK CHARGE (0-20%): 15-20 minutes. HALF CHARGE (0-50%): 35-45 minutes. FULL CHARGE (0-100%): 60-90 minutes. FAST CHARGING: Some docks support fast charge to 80% in 40 minutes, but last 20% always takes longer (battery chemistry limits). You'll typically see charge rates of 1-1.5% per minute up to 80%, then drops to 0.3-0.5% per minute for final 20%. Many warehouses operate on 'opportunity charging' - robot charges whenever idle for >10 minutes, doesn't need full 100%."
         },
         {
-          "question": "Only slips in certain areas of warehouse",
-          "answer": "This indicates localized floor issue, not wheel problem. Causes: 1) That area may have different flooring material (tiles vs concrete). 2) Recent spill or cleaning in that zone. 3) Temperature/humidity difference causing condensation. 4) Floor sealant or wax applied unevenly. Solution: Mark problematic area, clean thoroughly, consider anti-slip treatment for that zone, or route robots around it."
+          "question": "Robot goes to charge but battery still shows low",
+          "answer": "This indicates charging system fault, not normal operation. Check: 1) CHARGING INDICATOR - Should see orange/red LED and lightning bolt icon within 2 minutes of docking. If not, not actually charging. 2) CONTACT ALIGNMENT - Undock and redock robot, listen for 'click' sound. 3) CLEAN CONTACTS - Corrosion or dirt prevents electrical connection. 4) TEST OTHER DOCK - If works on different dock, original dock is faulty. 5) CHECK DOCK POWER - Verify dock has power (green LED). If all checks pass but still no charge, likely issue with robot's charging circuit - requires technician."
         },
         {
-          "question": "How often should wheels be replaced?",
-          "answer": "Typical wheel lifespan: 12-18 months with normal use. Factors affecting life: 1) Operating hours per day (more hours = faster wear). 2) Load weight (heavier loads = faster wear). 3) Floor surface (rough concrete wears faster than smooth). 4) Frequency of starts/stops (more wear). Check tread depth monthly - replace when below 1.5mm. Don't wait for complete failure."
+          "question": "Is it bad to charge battery frequently?",
+          "answer": "NO - modern lithium batteries don't have 'memory effect' and actually prefer frequent partial charges over deep discharge. BEST PRACTICE: Charge whenever robot is idle for >10 minutes, even if battery is 60-70%. AVOID: Letting battery drop below 10% regularly - this reduces battery lifespan by 20-30%. MYTH: 'Must fully discharge before charging' - this applied to old NiCad batteries, NOT lithium. OPTIMAL: Keep battery between 40-80% for longest lifespan, though 20-90% is acceptable for daily ops."
         },
         {
-          "question": "Can I reduce robot speed to help with slippage?",
-          "answer": "Yes, reducing speed helps temporarily but doesn't fix root cause. In robot settings, reduce max speed by 25-50%. This gives wheels more time to grip and reduces sudden acceleration forces. However: This is a TEMPORARY measure only. You must still identify and fix the actual problem (wet floor, worn wheels, etc.). Don't operate long-term at reduced speed as it affects productivity."
+          "question": "Why does battery percentage jump around?",
+          "answer": "This is normal for lithium batteries due to voltage-based estimation. UNDER LOAD: Battery voltage drops, percentage may show lower. IDLE: Voltage recovers, percentage may show higher. COLD: Battery shows lower percentage than actual (voltage temporarily depressed). AFTER CHARGE: May show 100% but drop to 95% after 5 minutes (surface charge dissipates). MOST ACCURATE: Reading after robot has been idle for 5+ minutes. If percentage jumps wildly (like 50% to 20% in 1 minute), this indicates failing battery cells - needs technician diagnosis with proper battery analyzer."
+        },
+        {
+          "question": "Can I manually push robot to charging dock?",
+          "answer": "YES but with precautions: 1) ENGAGE MANUAL MODE - Put robot in manual push mode first (usually button on robot or remote). 2) EMERGENCY STOP - Press emergency stop button before pushing. 3) PUSH GENTLY - Robot weighs 200-500 kg, don't strain yourself. 4) STRAIGHT PUSH - Push from behind, not from sides (damages wheels). 5) ALIGN CAREFULLY - Charging requires precise alignment, use painted markers on floor. 6) DISENGAGE MANUAL - Turn off manual mode after docking. DON'T PUSH if: Robot has brakes engaged and won't release, payload on robot (unload first), no manual mode button found (call technician)."
         }
       ],
-      "environmental_factors": [
-        "Temperature: Below 5°C, rubber wheels lose flexibility and grip",
-        "Humidity: Above 80% can cause floor condensation",
-        "Floor type: Smooth epoxy floors more slippery than rough concrete",
-        "Recent floor maintenance: Wax, sealant, or polish affects traction",
-        "Traffic: High-traffic areas may have compacted dirt layer"
-      ],
-      "related_issues": ["ERR_008 (Navigation Error)", "ERR_006 (Payload Overload)"],
+      "technical_specifications": {
+        "battery_type": "Lithium-ion (LiFePO4 or Li-NMC)",
+        "typical_capacity": "50-100 Ah @ 48V = 2.4-4.8 kWh",
+        "charge_voltage": "48-52V DC (nominal 48V system)",
+        "charge_current": "20-40A (fast charge), 10-15A (normal charge)",
+        "discharge_cutoff": "39-42V (battery protection circuit)",
+        "cycle_life": "1000-1500 cycles to 80% capacity",
+        "typical_lifespan": "2-3 years daily use, 4-5 years moderate use",
+        "operating_temperature": "0°C to 45°C (performance degrades outside range)",
+        "storage_temperature": "-20°C to 60°C (40-60% charge for long-term storage)"
+      },
+      "related_issues": ["ERR_012 (Charging Station Occupied)"],
       "safety_warnings": [
-        "Robot may move unpredictably during slippage - keep personnel clear",
-        "Wet floors are slip hazard for humans too - mark area",
-        "Don't attempt to push or guide slipping robot manually",
-        "Overloaded robot with slippage can cause structural damage"
+        "DO NOT attempt to open battery compartment - high voltage hazard",
+        "Keep battery dry - water + lithium = fire risk",
+        "If battery smells burnt or swells, evacuate area and call fire department",
+        "Never force charging contacts together - alignment must be natural",
+        "Damaged batteries can catch fire - if dropped or impacted, call technician"
       ],
       "escalation_criteria": [
-        "Slippage continues after floor cleaned and dried",
-        "Wheel tread depth below 1.5mm",
-        "Wheels show flat spots or deformation",
-        "Unusual vibration or noise from wheels",
-        "Uneven wear pattern across wheels (indicates alignment issue)"
+        "Battery health below 70% capacity",
+        "Battery age over 3 years with performance issues",
+        "Charging dock not providing power",
+        "Battery won't charge on any dock",
+        "Battery swelling or physical damage",
+        "Unusual smells or heat from battery",
+        "Voltage readings outside 39-55V range"
+      ],
+      "cost_estimates": {
+        "battery_replacement": "$800-2000",
+        "charging_dock_repair": "$200-500",
+        "contact_replacement": "$50-150",
+        "labor_typical": "1-2 hours"
+      },
+      "preventive_maintenance": [
+        "Clean charging contacts monthly",
+        "Test battery capacity quarterly",
+        "Review battery health scores in software weekly",
+        "Avoid deep discharge below 10%",
+        "Keep battery temperature 15-30°C when possible",
+        "Replace batteries proactively after 3 years",
+        "Schedule calibration cycles every 3 months"
       ]
     }
   }
