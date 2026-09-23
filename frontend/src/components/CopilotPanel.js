@@ -1,8 +1,74 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
+import axios from 'axios';
 import './CopilotPanel.css';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
 const CopilotPanel = ({ isOpen, onClose, robot, copilotData, loading, onClearError }) => {
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
+  const chatEndRef = useRef(null);
+
+  // Reset chat when panel opens with new robot
+  useEffect(() => {
+    if (isOpen && robot) {
+      setChatMessages([]);
+      setSessionId(null);
+    }
+  }, [isOpen, robot?.bot_id]);
+
+  // Auto-scroll to bottom of chat
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
+
+  const handleSendMessage = async () => {
+    if (!chatInput.trim() || !robot || !copilotData) return;
+
+    const userMessage = chatInput.trim();
+    setChatInput('');
+
+    // Add user message to chat
+    setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setChatLoading(true);
+
+    try {
+      const response = await axios.post(`${API}/copilot/chat`, {
+        message: userMessage,
+        bot_id: robot.bot_id,
+        error_code: copilotData.error_code,
+        session_id: sessionId
+      });
+
+      // Update session ID for conversation continuity
+      if (response.data.session_id) {
+        setSessionId(response.data.session_id);
+      }
+
+      // Add AI response to chat
+      setChatMessages(prev => [...prev, { role: 'assistant', content: response.data.response }]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      setChatMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, I encountered an error. Please try again.' 
+      }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
