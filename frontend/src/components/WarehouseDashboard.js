@@ -153,7 +153,7 @@ const WarehouseDashboard = () => {
                 </div>
               </div>
             </div>
-            <RobotGrid robots={robots} data-testid="robot-grid" />
+            <WarehouseGrid robots={robots} data-testid="warehouse-grid" />
           </section>
 
           {/* Robot Table */}
