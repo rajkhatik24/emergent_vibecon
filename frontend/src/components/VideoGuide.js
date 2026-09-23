@@ -351,11 +351,66 @@ const VideoGuide = ({ errorCode, errorTitle, recoverySteps, botId }) => {
         </Button>
       </div>
 
-      {/* AI Video Info */}
-      {showAIVideoOption && (
-        <div className="ai-video-info">
-          <p>🎬 AI-generated realistic video demonstrations coming soon!</p>
-          <p className="info-text">Upgrade to Pro to generate photorealistic video guides using AI.</p>
+      {/* AI Video Generation Status */}
+      {aiVideoStatus === 'generating' && (
+        <div className="ai-video-generating" data-testid="ai-video-generating">
+          <div className="generating-spinner"></div>
+          <p>🎬 AI is crafting your custom video guide...</p>
+          <p className="info-text">This may take 1-2 minutes. The AI is analyzing the error and creating a realistic demonstration video.</p>
+        </div>
+      )}
+
+      {/* AI Video Player */}
+      {aiVideoStatus === 'completed' && aiVideoUrl && (
+        <div className="ai-video-player" data-testid="ai-video-player">
+          <div className="video-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <h4>AI-Generated Video Guide</h4>
+          </div>
+          <video 
+            controls 
+            autoPlay 
+            loop
+            className="ai-video"
+            data-testid="ai-video-element"
+          >
+            <source src={aiVideoUrl} type="video/mp4" />
+            Your browser does not support video playback.
+          </video>
+          {aiVideoPrompt && (
+            <div className="video-prompt-info">
+              <strong>AI Prompt:</strong> {aiVideoPrompt}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* AI Video Error */}
+      {aiVideoStatus === 'failed' && (
+        <div className="ai-video-error" data-testid="ai-video-error">
+          <div className="error-icon">⚠️</div>
+          <p className="error-title">Video Generation Not Available</p>
+          <p className="error-message">{errorMessage}</p>
+          {aiVideoPrompt && (
+            <div className="prompt-preview">
+              <strong>Generated Prompt:</strong>
+              <p>{aiVideoPrompt}</p>
+            </div>
+          )}
+          {errorMessage && errorMessage.includes('REPLICATE_API_TOKEN') && (
+            <div className="setup-instructions">
+              <h5>🎯 Setup Instructions:</h5>
+              <ol>
+                <li>Go to <a href="https://replicate.com" target="_blank" rel="noopener noreferrer">replicate.com</a></li>
+                <li>Sign up for free account (50 videos/month)</li>
+                <li>Copy your API token</li>
+                <li>Add to backend/.env: <code>REPLICATE_API_TOKEN=your_token</code></li>
+                <li>Restart backend and try again!</li>
+              </ol>
+            </div>
+          )}
         </div>
       )}
     </div>
