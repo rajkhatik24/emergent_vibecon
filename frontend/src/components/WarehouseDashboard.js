@@ -5,6 +5,7 @@ import RobotTable from './RobotTable';
 import CopilotPanel from './CopilotPanel';
 import { Toaster } from './ui/sonner';
 import { toast } from 'sonner';
+import './WarehouseDashboard.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
