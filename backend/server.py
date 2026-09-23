@@ -584,6 +584,11 @@ async def chat_with_copilot(request: ChatMessage):
         if deep_knowledge and 'escalation_criteria' in deep_knowledge:
             escalation_text = "\n\nESCALATE TO TECHNICIAN IF: " + "; ".join(deep_knowledge['escalation_criteria'])
         
+        # Add technical search results if found
+        technical_info_text = ""
+        if technical_search_result and "TECHNICAL INFO FOUND" in technical_search_result:
+            technical_info_text = f"\n\nONLINE TECHNICAL INFORMATION:\n{technical_search_result}\nUse this information to provide specific guidance about the error code or component mentioned."
+        
         system_message = f"""You are an expert AI assistant helping warehouse operators fix robot issues. You're assisting with robot {request.bot_id}.
 
 ROBOT STATUS:
