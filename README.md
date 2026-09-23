@@ -80,7 +80,7 @@ A real-time monitoring and AI-powered support system for warehouse robot fleets.
 - Python 3.11+
 - Node.js 18+
 - MongoDB
-- Emergent LLM Key (provided)
+- Your own Emergent LLM key
 
 ### Installation
 
@@ -98,24 +98,30 @@ yarn install
 
 3. **Environment Configuration**
 
+Copy `backend/.env.example` to `backend/.env` and set your own credentials. Never commit `.env` files.
+
 Backend `.env`:
 ```
 MONGO_URL="mongodb://localhost:27017"
 DB_NAME="warehouse_robots"
-CORS_ORIGINS="*"
+CORS_ORIGINS="http://localhost:3000"
 EMERGENT_LLM_KEY=YOUR_EMERGENT_LLM_KEY
 ```
 
+Copy `frontend/.env.example` to `frontend/.env`. Frontend environment variables are public; never put API secrets in them.
+
 Frontend `.env`:
 ```
-REACT_APP_BACKEND_URL=https://warehouse-bot-aid.preview.emergentagent.com
+REACT_APP_BACKEND_URL=http://localhost:8001
 ```
 
 ### Running the Application
 
-The application is automatically running:
-- Backend: Available via the configured backend URL
-- Frontend: Available at https://warehouse-bot-aid.preview.emergentagent.com
+Configure the backend URL for your own deployment.
+
+This is a demo. Before exposing the backend publicly, put authentication and rate limits in front of the paid AI endpoints. CORS is not access control.
+
+The technical documents and recovery instructions included here have not been verified against official manufacturer documentation. Do not use them as authoritative instructions for real hardware.
 
 ## 🔌 API Endpoints
 
