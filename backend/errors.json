@@ -1,0 +1,184 @@
+{
+  "errors": [
+    {
+      "code": "ERR_001",
+      "title": "Sensor Malfunction",
+      "description": "Robot's proximity sensor is not responding",
+      "steps": [
+        "Stop the robot immediately using the emergency button",
+        "Check sensor cable connections at the base unit",
+        "Clean the sensor lens with a microfiber cloth",
+        "Restart the robot and run sensor diagnostics",
+        "If issue persists, replace the sensor module"
+      ]
+    },
+    {
+      "code": "ERR_002",
+      "title": "Low Battery Critical",
+      "description": "Battery level below 5% - immediate charging required",
+      "steps": [
+        "Robot will auto-navigate to nearest charging station",
+        "Ensure charging dock is clear of obstacles",
+        "Monitor charging status - should reach 20% in 15 minutes",
+        "If not charging, check power supply to dock",
+        "Inspect charging contacts for debris or damage"
+      ]
+    },
+    {
+      "code": "ERR_003",
+      "title": "Path Obstruction Detected",
+      "description": "Robot cannot proceed due to blocked pathway",
+      "steps": [
+        "Check robot's current location on the map",
+        "Manually clear any obstacles in the path",
+        "Press the 'Resume' button on the control panel",
+        "If error repeats, recalibrate navigation sensors",
+        "Update the warehouse map if new obstacles are permanent"
+      ]
+    },
+    {
+      "code": "ERR_004",
+      "title": "Motor Overheating",
+      "description": "Drive motor temperature exceeds safe operating limits",
+      "steps": [
+        "Robot will automatically stop and cool down for 10 minutes",
+        "Check for debris blocking motor vents",
+        "Ensure ambient temperature is within 15-30°C range",
+        "Reduce payload if robot is consistently overloaded",
+        "Schedule maintenance for motor inspection"
+      ]
+    },
+    {
+      "code": "ERR_005",
+      "title": "Communication Lost",
+      "description": "Robot lost connection to central control system",
+      "steps": [
+        "Check WiFi signal strength in robot's area",
+        "Verify warehouse router is operational",
+        "Restart the robot's communication module",
+        "Re-pair the robot with control system if needed",
+        "Contact IT support if network issues persist"
+      ]
+    },
+    {
+      "code": "ERR_006",
+      "title": "Payload Overload",
+      "description": "Carrying weight exceeds maximum capacity",
+      "steps": [
+        "Stop robot and remove excess items immediately",
+        "Check payload weight against robot specifications",
+        "Redistribute items across multiple trips",
+        "Inspect load sensors for calibration issues",
+        "Update task planning to prevent future overloads"
+      ]
+    },
+    {
+      "code": "ERR_007",
+      "title": "Gripper Malfunction",
+      "description": "Robotic arm cannot pick or release items",
+      "steps": [
+        "Manually release any stuck items",
+        "Check gripper hydraulic/pneumatic pressure",
+        "Test gripper controls in manual mode",
+        "Lubricate gripper joints if movement is stiff",
+        "Replace gripper pads if worn or damaged"
+      ]
+    },
+    {
+      "code": "ERR_008",
+      "title": "Navigation Error",
+      "description": "Robot position does not match expected coordinates",
+      "steps": [
+        "Stop robot and note current displayed position",
+        "Use manual controls to move to a known reference point",
+        "Run full navigation system recalibration",
+        "Check for magnetic interference near robot path",
+        "Update warehouse floor map if layout changed"
+      ]
+    },
+    {
+      "code": "ERR_009",
+      "title": "Software Update Required",
+      "description": "Robot firmware is outdated and needs update",
+      "steps": [
+        "Send robot to designated maintenance area",
+        "Connect to firmware update server",
+        "Do not interrupt update process (takes 5-10 minutes)",
+        "Robot will restart automatically after update",
+        "Verify new firmware version in system info"
+      ]
+    },
+    {
+      "code": "ERR_010",
+      "title": "Emergency Stop Activated",
+      "description": "Emergency stop button was pressed",
+      "steps": [
+        "Identify who pressed the emergency stop and why",
+        "Ensure area around robot is safe",
+        "Release emergency stop button by twisting clockwise",
+        "Press 'Reset' button on control panel",
+        "Manually restart robot operations"
+      ]
+    },
+    {
+      "code": "ERR_011",
+      "title": "Barcode Scanner Failure",
+      "description": "Cannot read item barcodes or QR codes",
+      "steps": [
+        "Clean scanner lens with appropriate cleaning solution",
+        "Test scanner with known good barcode",
+        "Check scanner alignment and focus settings",
+        "Verify adequate lighting in scanning area",
+        "Replace scanner module if hardware failure confirmed"
+      ]
+    },
+    {
+      "code": "ERR_012",
+      "title": "Charging Station Occupied",
+      "description": "Robot cannot access charging dock",
+      "steps": [
+        "Check which robot is currently charging",
+        "Estimate time until dock becomes available",
+        "Direct robot to alternative charging station",
+        "Manually move other robot if priority charging needed",
+        "Consider adding more charging stations if recurring"
+      ]
+    },
+    {
+      "code": "ERR_013",
+      "title": "Wheel Slippage Detected",
+      "description": "Robot wheels losing traction on floor surface",
+      "steps": [
+        "Inspect floor for wet spots or debris",
+        "Clean robot wheel treads",
+        "Check wheel tire condition for wear",
+        "Reduce robot speed in slippery areas",
+        "Report floor maintenance issues to facilities team"
+      ]
+    },
+    {
+      "code": "ERR_014",
+      "title": "Collision Avoidance Alert",
+      "description": "Near-miss with another robot or obstacle",
+      "steps": [
+        "Review collision logs to understand incident",
+        "Check if obstacle was stationary or moving",
+        "Verify all safety sensors are functioning",
+        "Adjust robot speed or spacing rules if needed",
+        "No immediate action required if system prevented collision"
+      ]
+    },
+    {
+      "code": "ERR_015",
+      "title": "Task Queue Overflow",
+      "description": "Robot has too many pending tasks",
+      "steps": [
+        "Review and prioritize current task list",
+        "Cancel or defer non-urgent tasks",
+        "Redistribute tasks to other available robots",
+        "Check for task assignment logic errors",
+        "Increase robot fleet size if consistently overwhelmed"
+      ]
+    }
+  ]
+}

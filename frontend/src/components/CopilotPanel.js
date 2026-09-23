@@ -1,0 +1,149 @@
+import React from 'react';
+import { Button } from './ui/button';
+import './CopilotPanel.css';
+
+const CopilotPanel = ({ isOpen, onClose, robot, copilotData, loading, onClearError }) => {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="copilot-overlay" onClick={onClose} data-testid="copilot-overlay"></div>
+      <div className={`copilot-panel ${isOpen ? 'open' : ''}`} data-testid="copilot-panel">
+        <div className="copilot-header">
+          <div className="copilot-header-content">
+            <div className="copilot-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5h-1v1.27c.6.34 1 .99 1 1.73 0 1.1-.9 2-2 2s-2-.9-2-2c0-.74.4-1.39 1-1.73V9H9a5 5 0 0 0-5 5H2a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                <path d="M7 14a5 5 0 0 0 5 5 5 5 0 0 0 5-5"/>
+                <path d="M12 19v3"/>
+              </svg>
+            </div>
+            <div>
+              <h2 className="copilot-title">AI Copilot</h2>
+              <p className="copilot-subtitle">Intelligent Error Analysis</p>
+            </div>
+          </div>
+          <button className="close-btn" onClick={onClose} data-testid="close-copilot-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div className="copilot-body">
+          {loading ? (
+            <div className="copilot-loading" data-testid="copilot-loading">
+              <div className="loading-spinner"></div>
+              <p>Analyzing error and generating recovery steps...</p>
+            </div>
+          ) : copilotData ? (
+            <>
+              {/* Robot Info */}
+              <div className="info-card" data-testid="robot-info-card">
+                <div className="info-card-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect width="18" height="10" x="3" y="11" rx="2"/>
+                    <circle cx="12" cy="5" r="2"/>
+                    <path d="M12 7v4"/>
+                  </svg>
+                  <h3>Robot Information</h3>
+                </div>
+                <div className="robot-details">
+                  <div className="detail-row">
+                    <span className="detail-label">Bot ID:</span>
+                    <span className="detail-value" data-testid="copilot-robot-id">{robot?.bot_id}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Battery:</span>
+                    <span className="detail-value" data-testid="copilot-robot-battery">{robot?.battery}%</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Position:</span>
+                    <span className="detail-value" data-testid="copilot-robot-position">X: {robot?.position_x}, Y: {robot?.position_y}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Error Info */}
+              <div className="error-card" data-testid="error-info-card">
+                <div className="error-card-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" x2="12" y1="8" y2="12"/>
+                    <line x1="12" x2="12.01" y1="16" y2="16"/>
+                  </svg>
+                  <div>
+                    <span className="error-code" data-testid="copilot-error-code">{copilotData.error_code}</span>
+                    <h3 className="error-title" data-testid="copilot-error-title">{copilotData.title}</h3>
+                  </div>
+                </div>
+                <p className="error-description" data-testid="copilot-error-description">{copilotData.description}</p>
+              </div>
+
+              {/* AI Explanation */}
+              {copilotData.llm_explanation && (
+                <div className="ai-explanation" data-testid="ai-explanation">
+                  <div className="ai-explanation-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m3 11 18-5v12L3 14v-3z"/>
+                      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+                    </svg>
+                    <h3>AI Copilot Guidance</h3>
+                  </div>
+                  <div className="ai-content" data-testid="ai-explanation-content">
+                    {copilotData.llm_explanation}
+                  </div>
+                </div>
+              )}
+
+              {/* Recovery Steps */}
+              <div className="recovery-steps" data-testid="recovery-steps">
+                <div className="steps-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="9" x2="15" y1="13" y2="13"/>
+                    <line x1="9" x2="15" y1="17" y2="17"/>
+                  </svg>
+                  <h3>Recovery Steps</h3>
+                </div>
+                <ol className="steps-list">
+                  {copilotData.recovery_steps.map((step, index) => (
+                    <li key={index} className="step-item" data-testid={`recovery-step-${index}`}>
+                      <span className="step-number">{index + 1}</span>
+                      <span className="step-text">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              {/* Actions */}
+              <div className="copilot-actions">
+                <Button
+                  onClick={() => onClearError(robot?.bot_id)}
+                  className="clear-error-btn"
+                  data-testid="clear-error-btn"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Mark as Resolved
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="copilot-empty" data-testid="copilot-empty">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5h-1v1.27c.6.34 1 .99 1 1.73 0 1.1-.9 2-2 2s-2-.9-2-2c0-.74.4-1.39 1-1.73V9H9a5 5 0 0 0-5 5H2a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+              </svg>
+              <p>Select a robot with an error to get AI assistance</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default CopilotPanel;
