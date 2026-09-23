@@ -505,6 +505,23 @@ Return ONLY the video generation prompt, nothing else. Keep it under 400 charact
             message=f"Video generation failed: {str(e)}"
         )
 
+async def search_technical_info(query: str) -> str:
+    """Search for technical information online"""
+    try:
+        # Use a search API or web search (simplified here)
+        search_url = f"https://api.duckduckgo.com/?q={query}&format=json"
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(search_url)
+            if response.status_code == 200:
+                data = response.json()
+                abstract = data.get('AbstractText', '')
+                if abstract:
+                    return f"TECHNICAL INFO FOUND: {abstract}"
+        return "No specific technical information found online."
+    except Exception as e:
+        logging.error(f"Web search failed: {e}")
+        return "Unable to search for technical information at this time."
+
 @api_router.post("/copilot/chat", response_model=ChatResponse)
 async def chat_with_copilot(request: ChatMessage):
     """Chat with AI copilot about a specific robot error"""
@@ -518,6 +535,18 @@ async def chat_with_copilot(request: ChatMessage):
     error = ERRORS_KB.get(request.error_code)
     if not error:
         raise HTTPException(status_code=404, detail="Error code not found")
+    
+    # Check if operator mentions specific error codes or technical terms
+    technical_search_result = ""
+    message_lower = request.message.lower()
+    
+    # Detect error codes, component names, or technical issues
+    if any(term in message_lower for term in ['error', 'code', 'driver', 'motor', 'fault', 'alarm']):
+        # Extract potential error code or component
+        search_query = request.message
+        logging.info(f"Detected technical query, searching for: {search_query}")
+        technical_search_result = await search_technical_info(search_query)
+        logging.info(f"Search result: {technical_search_result}")
     
     try:
         api_key = os.environ.get('EMERGENT_LLM_KEY')
