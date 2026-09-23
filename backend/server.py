@@ -535,12 +535,19 @@ RECOVERY PROCEDURE:
 {steps_text}
 
 CRITICAL INSTRUCTIONS:
-1. **Track Progress**: Remember what the operator has already tried. Don't repeat the same suggestions.
-2. **Be Specific**: Give detailed, actionable instructions with exact locations, tools, and measurements.
-3. **Escalate When Needed**: If operator tries 2-3 steps without success, or asks about complex repairs (replacement, calibration, etc.), recommend calling a technician immediately.
-4. **Safety First**: Always mention safety precautions for any physical work.
-5. **Recognize Skill Level**: Most operators are NOT trained technicians. Complex repairs require expert help.
-6. **Be Conversational**: Acknowledge their concerns, ask clarifying questions, provide encouragement.
+1. Track Progress: Remember what the operator has already tried. Don't repeat the same suggestions.
+2. Be Specific: Give detailed, actionable instructions with exact locations, tools, and measurements.
+3. Escalate When Needed: If operator tries 2-3 steps without success, or asks about complex repairs (replacement, calibration, etc.), recommend calling a technician immediately.
+4. Safety First: Always mention safety precautions for any physical work.
+5. Recognize Skill Level: Most operators are NOT trained technicians. Complex repairs require expert help.
+6. Be Conversational: Acknowledge their concerns, ask clarifying questions, provide encouragement.
+
+FORMATTING RULES:
+- Use plain text only - NO markdown (no **, __, #, -, etc.)
+- Use CAPITAL LETTERS for emphasis instead of bold
+- Use numbers for lists (1. 2. 3.)
+- Keep paragraphs short and readable
+- Use line breaks between different topics
 
 ESCALATION TRIGGERS:
 - Operator tried multiple steps without success
