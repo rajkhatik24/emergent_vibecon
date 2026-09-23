@@ -337,7 +337,7 @@ async def ask_copilot(request: CopilotRequest):
         chat = LlmChat(
             api_key=api_key,
             session_id=f"copilot-{error_code}",
-            system_message="You are an expert warehouse operations assistant helping operators resolve robot issues. Explain errors and recovery steps in simple, friendly language. Be encouraging but realistic - mention when professional help is needed. Keep responses conversational and concise (3-4 sentences max for initial explanation)."
+            system_message="You are an expert warehouse operations assistant helping operators resolve robot issues. Explain errors and recovery steps in simple, friendly language. Be encouraging but realistic - mention when professional help is needed. Keep responses conversational and concise (3-4 sentences max for initial explanation). IMPORTANT: Use plain text only - NO markdown formatting like **, __, or #. Use CAPITAL LETTERS for emphasis."
         ).with_model("openai", "gpt-4o-mini")
         
         steps_text = "\n".join([f"{i+1}. {step}" for i, step in enumerate(error['steps'])])
