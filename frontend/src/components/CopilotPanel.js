@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import axios from 'axios';
+import VideoGuide from './VideoGuide';
 import './CopilotPanel.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
